@@ -1,0 +1,332 @@
+/* =============================================================================
+   P. SIMS HAIR BOUTIQUE LLC — Art Deco Noir Luxe Design System
+   Design Philosophy: Deep obsidian black canvas, rose gold metallic accents,
+   Art Deco geometric ornamentation, editorial asymmetric layout.
+   Typography: Playfair Display (display) + Cormorant Garamond (body) + Josefin Sans (labels)
+   ============================================================================= */
+
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Rose Gold custom tokens */
+  --color-rose-gold: var(--rose-gold);
+  --color-rose-gold-light: var(--rose-gold-light);
+  --color-rose-gold-dark: var(--rose-gold-dark);
+  --color-champagne: var(--champagne);
+  --color-obsidian: var(--obsidian);
+  --color-obsidian-light: var(--obsidian-light);
+}
+
+:root {
+  /* Rose Gold Palette */
+  --rose-gold: oklch(0.68 0.09 22);
+  --rose-gold-light: oklch(0.80 0.07 22);
+  --rose-gold-dark: oklch(0.52 0.10 22);
+  --champagne: oklch(0.94 0.03 60);
+  --obsidian: oklch(0.10 0.005 285);
+  --obsidian-light: oklch(0.16 0.006 285);
+
+  /* Core Semantic Colors — Dark Theme */
+  --background: oklch(0.08 0.004 285);
+  --foreground: oklch(0.93 0.02 60);
+  --card: oklch(0.12 0.005 285);
+  --card-foreground: oklch(0.93 0.02 60);
+  --popover: oklch(0.12 0.005 285);
+  --popover-foreground: oklch(0.93 0.02 60);
+  --primary: oklch(0.68 0.09 22);
+  --primary-foreground: oklch(0.08 0.004 285);
+  --secondary: oklch(0.16 0.006 285);
+  --secondary-foreground: oklch(0.80 0.07 22);
+  --muted: oklch(0.18 0.006 285);
+  --muted-foreground: oklch(0.65 0.03 60);
+  --accent: oklch(0.20 0.008 285);
+  --accent-foreground: oklch(0.80 0.07 22);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0 0);
+  --border: oklch(0.68 0.09 22 / 25%);
+  --input: oklch(0.68 0.09 22 / 20%);
+  --ring: oklch(0.68 0.09 22 / 60%);
+  --radius: 0.25rem;
+
+  --chart-1: oklch(0.68 0.09 22);
+  --chart-2: oklch(0.80 0.07 22);
+  --chart-3: oklch(0.52 0.10 22);
+  --chart-4: oklch(0.94 0.03 60);
+  --chart-5: oklch(0.40 0.08 22);
+
+  --sidebar: oklch(0.10 0.005 285);
+  --sidebar-foreground: oklch(0.93 0.02 60);
+  --sidebar-primary: oklch(0.68 0.09 22);
+  --sidebar-primary-foreground: oklch(0.08 0.004 285);
+  --sidebar-accent: oklch(0.16 0.006 285);
+  --sidebar-accent-foreground: oklch(0.80 0.07 22);
+  --sidebar-border: oklch(0.68 0.09 22 / 20%);
+  --sidebar-ring: oklch(0.68 0.09 22 / 60%);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+  }
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [type="button"]:not(:disabled),
+  [type="submit"]:not(:disabled),
+  [type="reset"]:not(:disabled),
+  a[href],
+  select:not(:disabled),
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled) {
+    @apply cursor-pointer;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', Georgia, serif;
+  }
+}
+
+@layer components {
+  .container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .flex {
+    min-height: 0;
+    min-width: 0;
+  }
+
+  @media (min-width: 640px) {
+    .container {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container {
+      padding-left: 2rem;
+      padding-right: 2rem;
+      max-width: 1280px;
+    }
+  }
+
+  /* Art Deco Rose Gold Button */
+  .btn-rose-gold {
+    background: linear-gradient(135deg, oklch(0.68 0.09 22), oklch(0.80 0.07 22), oklch(0.68 0.09 22));
+    background-size: 200% 200%;
+    color: oklch(0.08 0.004 285);
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 0.875rem 2.5rem;
+    border: none;
+    position: relative;
+    overflow: hidden;
+    transition: background-position 0.5s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  }
+
+  .btn-rose-gold:hover {
+    background-position: right center;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 30px oklch(0.68 0.09 22 / 40%);
+  }
+
+  .btn-rose-gold::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+  }
+
+  .btn-rose-gold:hover::after {
+    transform: translateX(100%);
+  }
+
+  /* Art Deco Outline Button */
+  .btn-outline-gold {
+    background: transparent;
+    color: oklch(0.80 0.07 22);
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 0.875rem 2.5rem;
+    border: 1px solid oklch(0.68 0.09 22 / 70%);
+    transition: all 0.3s ease;
+  }
+
+  .btn-outline-gold:hover {
+    background: oklch(0.68 0.09 22 / 10%);
+    border-color: oklch(0.80 0.07 22);
+    box-shadow: 0 0 20px oklch(0.68 0.09 22 / 20%);
+  }
+
+  /* Art Deco divider line */
+  .deco-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .deco-divider::before,
+  .deco-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, oklch(0.68 0.09 22), transparent);
+  }
+
+  /* Rose gold text gradient */
+  .text-rose-gold-gradient {
+    background: linear-gradient(135deg, oklch(0.68 0.09 22), oklch(0.80 0.07 22), oklch(0.68 0.09 22));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Art Deco card border */
+  .card-deco {
+    border: 1px solid oklch(0.68 0.09 22 / 25%);
+    position: relative;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .card-deco:hover {
+    border-color: oklch(0.68 0.09 22 / 60%);
+    box-shadow: 0 0 30px oklch(0.68 0.09 22 / 15%);
+  }
+
+  /* Section label style */
+  .section-label {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: oklch(0.68 0.09 22);
+  }
+
+  /* Motion-shot frame — ken-burns animation as a stand-in until real video clips
+     are dropped in. Replace .motion-media's <img> with a <video> when ready. */
+  .motion-frame .motion-media {
+    animation: ken-burns 14s ease-in-out infinite alternate;
+    transform-origin: center center;
+    will-change: transform;
+  }
+
+  .motion-frame .motion-sweep {
+    background: linear-gradient(
+      115deg,
+      transparent 30%,
+      oklch(0.85 0.07 22 / 0.08) 48%,
+      oklch(0.94 0.03 60 / 0.12) 50%,
+      oklch(0.85 0.07 22 / 0.08) 52%,
+      transparent 70%
+    );
+    background-size: 250% 250%;
+    animation: motion-sweep 6s ease-in-out infinite;
+    mix-blend-mode: screen;
+  }
+
+  @keyframes ken-burns {
+    0%   { transform: scale(1.05) translate(0, 0); }
+    50%  { transform: scale(1.12) translate(-1.5%, -1%); }
+    100% { transform: scale(1.08) translate(1%, -0.5%); }
+  }
+
+  @keyframes motion-sweep {
+    0%   { background-position: -50% -50%; opacity: 0.3; }
+    50%  { background-position: 150% 150%; opacity: 0.6; }
+    100% { background-position: -50% -50%; opacity: 0.3; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .motion-frame .motion-media { animation: none; }
+    .motion-frame .motion-sweep { animation: none; opacity: 0; }
+  }
+
+  /* Scroll animation base */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: oklch(0.08 0.004 285);
+}
+::-webkit-scrollbar-thumb {
+  background: oklch(0.68 0.09 22 / 50%);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.68 0.09 22 / 80%);
+}
+
+/* Selection color */
+::selection {
+  background: oklch(0.68 0.09 22 / 30%);
+  color: oklch(0.94 0.03 60);
+}
