@@ -10,6 +10,7 @@ import { toast } from "sonner";
 const navLinks = [
   { label: "Home", href: "#home" },
   { label: "Collections", href: "#collections" },
+  { label: "Tape-Ins", href: "#tape-ins" },
   { label: "Services", href: "#services" },
   { label: "About", href: "#about" },
   { label: "Contact", href: "#contact" },

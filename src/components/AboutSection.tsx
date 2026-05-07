@@ -12,18 +12,18 @@ const TEXTURE_IMG =
 const values = [
   {
     icon: Gem,
-    title: "Premium Quality",
-    text: "We source only the finest 100% virgin Remy human hair from ethical suppliers worldwide.",
+    title: "Virgin Remy Quality",
+    text: "Only 100% virgin Remy human hair, cuticles intact and ethically sourced — built to be washed, styled, and reused for years.",
   },
   {
     icon: Heart,
-    title: "Client-First",
-    text: "Every client is treated like royalty. Your satisfaction and confidence are our ultimate measure of success.",
+    title: "Empowered, Together",
+    text: "We foster a supportive space that reminds every woman she is never alone in wanting to feel her most beautiful.",
   },
   {
     icon: Award,
-    title: "Expert Craftsmanship",
-    text: "Over a decade of mastery in hair artistry, from installation to custom color and styling.",
+    title: "Decade of Mastery",
+    text: "Over ten years of hands-on artistry — from custom wig construction to seamless extension installs and color.",
   },
 ];
 
@@ -101,7 +101,7 @@ export default function AboutSection() {
                 className="font-['Cormorant_Garamond'] text-base italic leading-relaxed"
                 style={{ color: "oklch(0.80 0.05 60)" }}
               >
-                Your hair is your crown. We're here to make sure it reigns.
+                Your hair is your crown — and you are never alone in wanting it to reign.
               </p>
               <div className="flex items-center gap-3 mt-4">
                 <div
@@ -147,13 +147,13 @@ export default function AboutSection() {
                 className="font-['Cormorant_Garamond'] text-lg leading-relaxed mb-4"
                 style={{ color: "oklch(0.70 0.02 60)" }}
               >
-                P. Sims Hair Boutique LLC was founded on a singular belief: every woman deserves to feel like royalty. What began as a passion for beautiful hair has grown into one of the most trusted luxury hair destinations.
+                P. Sims Hair Boutique LLC was founded on a singular belief: every woman deserves to feel like royalty. A decade of passion has grown into a trusted destination for luxury hair — and a community where confidence is the standard, not the exception.
               </p>
               <p
                 className="font-['Cormorant_Garamond'] text-lg leading-relaxed"
                 style={{ color: "oklch(0.70 0.02 60)" }}
               >
-                We offer an unmatched selection of premium hair extensions, custom wigs, and professional salon services — all delivered with the warmth, expertise, and attention to detail that defines the P. Sims experience.
+                From tape-ins and bundles to custom lace wigs and color services, every piece is curated with the same care, warmth, and attention to detail that defines the P. Sims experience — because new looks should always feel like the best investment.
               </p>
             </div>
 

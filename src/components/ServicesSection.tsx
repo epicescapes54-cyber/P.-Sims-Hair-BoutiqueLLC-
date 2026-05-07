@@ -17,23 +17,23 @@ const services = [
     duration: "2–3 hrs",
     price: "From $150",
     description:
-      "Professional lace front and full lace wig installation with custom bleaching, plucking, and styling.",
+      "HD lace front and full lace installs with custom bleaching, plucking, and a hairline finished to look like it grew from your scalp.",
   },
   {
     icon: Scissors,
-    title: "Hair Extension Application",
+    title: "Tape-In & Sew-In Extensions",
     duration: "1.5–2 hrs",
     price: "From $120",
     description:
-      "Seamless sew-in and tape-in extension services using only premium Remy human hair.",
+      "Seamless tape-in and sew-in installs using 100% virgin Remy human hair — discreet wefts, all-day comfort, weeks of wear.",
   },
   {
     icon: Sparkles,
-    title: "Luxury Hair Treatment",
+    title: "Hydration & Repair Treatment",
     duration: "1 hr",
     price: "From $80",
     description:
-      "Deep conditioning, keratin treatment, and scalp therapy for healthy, radiant hair.",
+      "Deep conditioning, keratin smoothing, and scalp therapy for hair that feels nourished, soft, and visibly radiant.",
   },
   {
     icon: Star,
@@ -41,7 +41,7 @@ const services = [
     duration: "2–4 hrs",
     price: "From $200",
     description:
-      "Expert color services including balayage, ombre, and full color transformations.",
+      "Balayage, ombre, highlights, and full color transformations — placed by hand for dimension that flatters your tone.",
   },
 ];
 
@@ -120,7 +120,7 @@ export default function ServicesSection() {
               className="font-['Cormorant_Garamond'] text-lg leading-relaxed"
               style={{ color: "oklch(0.65 0.02 60)" }}
             >
-              Every service at P. Sims Hair Boutique is a bespoke experience. Our master stylists combine technical expertise with an eye for beauty to deliver results that exceed expectations.
+              Every appointment at P. Sims is bespoke. Our master stylists pair a decade of technical craft with an editorial eye — so you leave looking like the most polished version of yourself, not a trend.
             </p>
           </div>
         </div>

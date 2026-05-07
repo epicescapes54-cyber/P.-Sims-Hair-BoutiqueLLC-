@@ -22,7 +22,8 @@
       "Bash(open *)",
       "Bash(curl -s \"http://localhost:5173/src/App.tsx\")",
       "Bash(curl -s http://localhost:5173/)",
-      "Bash(ipconfig getifaddr *)"
+      "Bash(ipconfig getifaddr *)",
+      "Bash(git add *)"
     ]
   }
 }

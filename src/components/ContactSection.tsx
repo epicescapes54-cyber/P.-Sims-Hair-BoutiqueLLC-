@@ -127,7 +127,7 @@ export default function ContactSection() {
                 className="font-['Cormorant_Garamond'] text-lg leading-relaxed"
                 style={{ color: "oklch(0.65 0.02 60)" }}
               >
-                Ready to elevate your look? Reach out to schedule a consultation or book your appointment. We'd love to hear from you.
+                Ready for your next look? Reach out for a consultation, custom wig fitting, or tape-in install — we typically reply within 24 hours.
               </p>
             </div>
 
@@ -358,14 +358,17 @@ export default function ContactSection() {
                     <option value="" style={{ background: "oklch(0.14 0.005 285)" }}>
                       Select a service
                     </option>
+                    <option value="tape-ins" style={{ background: "oklch(0.14 0.005 285)" }}>
+                      Tape-In Extensions
+                    </option>
                     <option value="extensions" style={{ background: "oklch(0.14 0.005 285)" }}>
-                      Hair Extensions
+                      Sew-In / Bundles
                     </option>
                     <option value="wig" style={{ background: "oklch(0.14 0.005 285)" }}>
-                      Wig Installation
+                      Custom Wig Install
                     </option>
                     <option value="treatment" style={{ background: "oklch(0.14 0.005 285)" }}>
-                      Hair Treatment
+                      Hydration & Repair
                     </option>
                     <option value="color" style={{ background: "oklch(0.14 0.005 285)" }}>
                       Color & Highlights
