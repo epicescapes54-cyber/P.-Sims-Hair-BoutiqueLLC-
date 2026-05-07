@@ -269,7 +269,7 @@ export default function ServicesSection() {
             Experience the P. Sims difference. Limited appointments available.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <a href="tel:+1234567890" className="btn-rose-gold flex items-center gap-2">
+            <a href="tel:+17703835824" className="btn-rose-gold flex items-center gap-2">
               <Phone size={14} />
               Call to Book
             </a>

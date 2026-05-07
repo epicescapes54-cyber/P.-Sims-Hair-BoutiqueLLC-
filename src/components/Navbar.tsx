@@ -78,7 +78,7 @@ export default function Navbar() {
             {/* Right Actions */}
             <div className="hidden md:flex items-center gap-4">
               <a
-                href="tel:+1234567890"
+                href="tel:+17703835824"
                 className="flex items-center gap-2 font-['Josefin_Sans'] text-[0.65rem] tracking-[0.15em] uppercase text-[oklch(0.68_0.09_22)] hover:text-[oklch(0.80_0.07_22)] transition-colors"
               >
                 <Phone size={13} />
@@ -149,7 +149,7 @@ export default function Navbar() {
           ))}
 
           <a
-            href="tel:+1234567890"
+            href="tel:+17703835824"
             className="mt-6 btn-rose-gold"
             onClick={() => setMenuOpen(false)}
           >

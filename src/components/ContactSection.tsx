@@ -69,8 +69,8 @@ export default function ContactSection() {
 
   const contactInfo = [
     { icon: MapPin, label: "Location", value: "Atlanta, GA" },
-    { icon: Phone, label: "Phone", value: "(404) 555-0190", href: "tel:+14045550190" },
-    { icon: Mail, label: "Email", value: "hello@psimshair.com", href: "mailto:hello@psimshair.com" },
+    { icon: Phone, label: "Phone", value: "(770) 383-5824", href: "tel:+17703835824" },
+    { icon: Mail, label: "Email", value: "psimmshairboutique@gmail.com", href: "mailto:psimmshairboutique@gmail.com" },
     { icon: Clock, label: "Hours", value: "Tue–Sat: 9AM–7PM" },
   ];
 

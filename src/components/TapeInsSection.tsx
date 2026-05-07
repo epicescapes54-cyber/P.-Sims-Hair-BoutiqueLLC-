@@ -5,105 +5,41 @@
    ============================================================================= */
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Truck, Info, Sparkles, ShieldCheck, ShoppingBag } from "lucide-react";
+import { Truck, Info, Sparkles, ShieldCheck, ShoppingBag, X } from "lucide-react";
 import { toast } from "sonner";
 
 const TAPE_IMG =
   "https://images.unsplash.com/photo-1560869713-7d0a29430803?w=900&h=1100&fit=crop";
 
-const textures = [
-  { name: "Silky Straight", pattern: "straight" },
-  { name: "Body Wave", pattern: "body-wave" },
-  { name: "Loose Wave", pattern: "loose-wave" },
-  { name: "Deep Wave", pattern: "deep-wave" },
-  { name: "Kinky Curly", pattern: "kinky-curly" },
-  { name: "Curly", pattern: "curly" },
-] as const;
+const textures = ["Straight", "Loose Wave", "Body Wave"] as const;
 
-const lengths = [12, 14, 16, 18, 20, 22, 24, 26];
+type LengthOption = { inches: number; price: number | null };
 
-const BASE_PRICE = 189;
-const PRICE_PER_INCH_OVER_16 = 12;
-
-function TexturePattern({ pattern }: { pattern: (typeof textures)[number]["pattern"] }) {
-  const stroke = "oklch(0.80 0.07 22)";
-  const faint = "oklch(0.80 0.07 22 / 50%)";
-
-  if (pattern === "straight") {
-    return (
-      <svg viewBox="0 0 80 100" className="w-full h-full" preserveAspectRatio="none">
-        {Array.from({ length: 9 }).map((_, i) => (
-          <line key={i} x1={6 + i * 8.5} y1="6" x2={6 + i * 8.5} y2="94" stroke={i % 2 === 0 ? stroke : faint} strokeWidth="1" />
-        ))}
-      </svg>
-    );
-  }
-  if (pattern === "body-wave") {
-    return (
-      <svg viewBox="0 0 80 100" className="w-full h-full" preserveAspectRatio="none">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <path key={i} d={`M${4 + i * 13} 6 Q${10 + i * 13} 30 ${4 + i * 13} 50 T${4 + i * 13} 94`} fill="none" stroke={i % 2 === 0 ? stroke : faint} strokeWidth="1" />
-        ))}
-      </svg>
-    );
-  }
-  if (pattern === "loose-wave") {
-    return (
-      <svg viewBox="0 0 80 100" className="w-full h-full" preserveAspectRatio="none">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <path key={i} d={`M${6 + i * 16} 6 Q${18 + i * 16} 35 ${6 + i * 16} 60 T${6 + i * 16} 94`} fill="none" stroke={i % 2 === 0 ? stroke : faint} strokeWidth="1" />
-        ))}
-      </svg>
-    );
-  }
-  if (pattern === "deep-wave") {
-    return (
-      <svg viewBox="0 0 80 100" className="w-full h-full" preserveAspectRatio="none">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <path key={i} d={`M${4 + i * 13} 6 Q${15 + i * 13} 22 ${4 + i * 13} 40 T${4 + i * 13} 74 T${4 + i * 13} 94`} fill="none" stroke={i % 2 === 0 ? stroke : faint} strokeWidth="1" />
-        ))}
-      </svg>
-    );
-  }
-  if (pattern === "kinky-curly") {
-    return (
-      <svg viewBox="0 0 80 100" className="w-full h-full" preserveAspectRatio="none">
-        {Array.from({ length: 24 }).map((_, i) => {
-          const cx = 8 + (i % 4) * 21;
-          const cy = 10 + Math.floor(i / 4) * 14;
-          return <circle key={i} cx={cx} cy={cy} r="3.5" fill="none" stroke={i % 2 === 0 ? stroke : faint} strokeWidth="1" />;
-        })}
-      </svg>
-    );
-  }
-  return (
-    <svg viewBox="0 0 80 100" className="w-full h-full" preserveAspectRatio="none">
-      {Array.from({ length: 16 }).map((_, i) => {
-        const cx = 10 + (i % 4) * 20;
-        const cy = 14 + Math.floor(i / 4) * 22;
-        return <path key={i} d={`M${cx - 5} ${cy} Q${cx} ${cy - 7} ${cx + 5} ${cy} T${cx + 15} ${cy}`} fill="none" stroke={i % 2 === 0 ? stroke : faint} strokeWidth="1" />;
-      })}
-    </svg>
-  );
-}
+const lengthOptions: LengthOption[] = [
+  { inches: 16, price: 114.99 },
+  { inches: 18, price: null },
+  { inches: 20, price: 134.99 },
+  { inches: 22, price: null },
+  { inches: 24, price: null },
+  { inches: 26, price: 164.99 },
+];
 
 function formatDate(d: Date) {
   return d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
 }
 
-function deliveryWindow() {
-  const now = new Date();
-  const start = new Date(now);
-  start.setDate(now.getDate() + 3);
-  const end = new Date(now);
-  end.setDate(now.getDate() + 6);
+function deliveryWindow(orderDate: Date) {
+  const start = new Date(orderDate);
+  start.setDate(orderDate.getDate() + 3);
+  const end = new Date(start);
+  end.setDate(start.getDate() + 4);
   return `${formatDate(start)} – ${formatDate(end)}`;
 }
 
 export default function TapeInsSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const [texture, setTexture] = useState<string>("Silky Straight");
-  const [length, setLength] = useState<number>(18);
+  const [texture, setTexture] = useState<string>("Straight");
+  const [length, setLength] = useState<number>(20);
   const [openPanel, setOpenPanel] = useState<"details" | "care" | null>("details");
 
   useEffect(() => {
@@ -125,12 +61,12 @@ export default function TapeInsSection() {
     return () => observer.disconnect();
   }, []);
 
-  const price = useMemo(() => {
-    const extra = Math.max(0, length - 16) * PRICE_PER_INCH_OVER_16;
-    return BASE_PRICE + extra;
-  }, [length]);
+  const price = useMemo(
+    () => lengthOptions.find((o) => o.inches === length)?.price ?? 0,
+    [length]
+  );
 
-  const window = useMemo(() => deliveryWindow(), []);
+  const window = useMemo(() => deliveryWindow(new Date()), []);
 
   const togglePanel = (panel: "details" | "care") => {
     setOpenPanel((cur) => (cur === panel ? null : panel));
@@ -175,7 +111,7 @@ export default function TapeInsSection() {
             className="font-['Cormorant_Garamond'] text-lg max-w-2xl leading-relaxed"
             style={{ color: "oklch(0.65 0.02 60)" }}
           >
-            Discreet medical-grade adhesive wefts crafted from 100% virgin Remy human hair. Built to lay flat against the scalp — invisible from above, weightless all day.
+            Our tape-in extensions offer a seamless and natural integration with your hair, ensuring a discreet and undetectable appearance. Enjoy a flawless blend that enhances your overall look.
           </p>
         </div>
 
@@ -228,7 +164,7 @@ export default function TapeInsSection() {
                 className="font-['Playfair_Display'] text-2xl font-bold"
                 style={{ color: "oklch(0.93 0.02 60)" }}
               >
-                40 pcs · 100g
+                20 pcs · 50g
               </p>
               <p
                 className="font-['Cormorant_Garamond'] text-sm italic mt-1"
@@ -242,7 +178,7 @@ export default function TapeInsSection() {
           {/* Right: Configurator */}
           <div className="flex flex-col gap-7">
             <div className="reveal">
-              <span className="section-label mb-3 block">Tape-In Bundle</span>
+              <span className="section-label mb-3 block">12A Tape-In Bundle</span>
               <div className="flex items-baseline gap-3 flex-wrap">
                 <span
                   className="font-['Playfair_Display'] text-4xl font-bold"
@@ -275,14 +211,14 @@ export default function TapeInsSection() {
                   {texture}
                 </span>
               </div>
-              <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
-                {textures.map((t) => {
-                  const active = texture === t.name;
+              <div className="grid grid-cols-3 gap-3">
+                {textures.map((name) => {
+                  const active = texture === name;
                   return (
                     <button
-                      key={t.name}
-                      onClick={() => setTexture(t.name)}
-                      className="group flex flex-col items-stretch text-left transition-all duration-300"
+                      key={name}
+                      onClick={() => setTexture(name)}
+                      className="flex items-center justify-center px-3 py-5 transition-all duration-300"
                       style={{
                         border: `1px solid ${active ? "oklch(0.80 0.07 22)" : "oklch(0.68 0.09 22 / 25%)"}`,
                         background: "oklch(0.11 0.005 285)",
@@ -295,28 +231,12 @@ export default function TapeInsSection() {
                         if (!active) (e.currentTarget as HTMLElement).style.borderColor = "oklch(0.68 0.09 22 / 25%)";
                       }}
                     >
-                      <div
-                        className="relative overflow-hidden"
-                        style={{
-                          aspectRatio: "4 / 5",
-                          background: "linear-gradient(135deg, oklch(0.10 0.005 285), oklch(0.14 0.006 285))",
-                        }}
+                      <span
+                        className="font-['Playfair_Display'] text-base font-semibold leading-tight text-center"
+                        style={{ color: active ? "oklch(0.85 0.07 22)" : "oklch(0.93 0.02 60)" }}
                       >
-                        <div className="absolute inset-0 p-2 opacity-80 group-hover:opacity-100 transition-opacity">
-                          <TexturePattern pattern={t.pattern} />
-                        </div>
-                      </div>
-                      <div
-                        className="px-2 py-1.5 text-center"
-                        style={{ borderTop: "1px solid oklch(0.68 0.09 22 / 15%)" }}
-                      >
-                        <span
-                          className="font-['Playfair_Display'] text-xs font-semibold leading-tight"
-                          style={{ color: active ? "oklch(0.85 0.07 22)" : "oklch(0.93 0.02 60)" }}
-                        >
-                          {t.name}
-                        </span>
-                      </div>
+                        {name}
+                      </span>
                     </button>
                   );
                 })}
@@ -339,52 +259,81 @@ export default function TapeInsSection() {
                   {length}" selected
                 </span>
               </div>
-              <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
-                {lengths.map((n) => {
-                  const active = length === n;
-                  const fillPct = ((n - 10) / 18) * 100;
+              <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
+                {lengthOptions.map((opt) => {
+                  const isAvailable = opt.price !== null;
+                  const active = isAvailable && length === opt.inches;
                   return (
                     <button
-                      key={n}
-                      onClick={() => setLength(n)}
-                      className="flex flex-col items-stretch transition-all duration-300"
+                      key={opt.inches}
+                      onClick={() => isAvailable && setLength(opt.inches)}
+                      disabled={!isAvailable}
+                      className="relative flex flex-col items-center justify-center gap-1 px-2 py-5 transition-all duration-300"
                       style={{
-                        border: `1px solid ${active ? "oklch(0.80 0.07 22)" : "oklch(0.68 0.09 22 / 25%)"}`,
-                        background: "oklch(0.11 0.005 285)",
+                        border: `1px solid ${
+                          active
+                            ? "oklch(0.80 0.07 22)"
+                            : isAvailable
+                            ? "oklch(0.68 0.09 22 / 25%)"
+                            : "oklch(0.68 0.09 22 / 12%)"
+                        }`,
+                        background: isAvailable ? "oklch(0.11 0.005 285)" : "oklch(0.10 0.005 285)",
                         boxShadow: active ? "0 0 18px oklch(0.68 0.09 22 / 30%)" : "none",
+                        cursor: isAvailable ? "pointer" : "not-allowed",
+                        opacity: isAvailable ? 1 : 0.55,
                       }}
                       onMouseEnter={(e) => {
-                        if (!active) (e.currentTarget as HTMLElement).style.borderColor = "oklch(0.68 0.09 22 / 60%)";
+                        if (isAvailable && !active)
+                          (e.currentTarget as HTMLElement).style.borderColor = "oklch(0.68 0.09 22 / 60%)";
                       }}
                       onMouseLeave={(e) => {
-                        if (!active) (e.currentTarget as HTMLElement).style.borderColor = "oklch(0.68 0.09 22 / 25%)";
+                        if (isAvailable && !active)
+                          (e.currentTarget as HTMLElement).style.borderColor = "oklch(0.68 0.09 22 / 25%)";
                       }}
                     >
-                      <div className="relative flex items-end justify-center px-2" style={{ height: "60px" }}>
-                        <div
-                          className="w-1.5"
-                          style={{
-                            height: `${Math.max(20, fillPct)}%`,
-                            background: active
-                              ? "linear-gradient(180deg, oklch(0.85 0.07 22), oklch(0.68 0.09 22))"
-                              : "linear-gradient(180deg, oklch(0.68 0.09 22 / 70%), oklch(0.52 0.10 22 / 70%))",
-                          }}
-                        />
-                      </div>
-                      <div
-                        className="px-2 py-1.5 text-center"
-                        style={{ borderTop: "1px solid oklch(0.68 0.09 22 / 15%)" }}
-                      >
+                      {/* Availability indicator */}
+                      {isAvailable ? (
                         <span
-                          className="font-['Playfair_Display'] font-bold"
+                          className="absolute top-2 right-2"
                           style={{
-                            fontSize: "0.9rem",
-                            color: active ? "oklch(0.85 0.07 22)" : "oklch(0.93 0.02 60)",
+                            width: "8px",
+                            height: "8px",
+                            borderRadius: "50%",
+                            background: "oklch(0.78 0.18 145)",
+                            boxShadow: "0 0 8px oklch(0.78 0.18 145 / 70%)",
                           }}
+                          aria-label="In stock"
+                        />
+                      ) : null}
+
+                      <span
+                        className="font-['Playfair_Display'] font-bold"
+                        style={{
+                          fontSize: "1.05rem",
+                          color: active
+                            ? "oklch(0.85 0.07 22)"
+                            : isAvailable
+                            ? "oklch(0.93 0.02 60)"
+                            : "oklch(0.55 0.02 60)",
+                        }}
+                      >
+                        {opt.inches}"
+                      </span>
+                      {isAvailable ? (
+                        <span
+                          className="font-['Playfair_Display'] text-lg font-bold"
+                          style={{ color: "oklch(0.80 0.07 22)" }}
                         >
-                          {n}"
+                          ${opt.price?.toFixed(2)}
                         </span>
-                      </div>
+                      ) : (
+                        <X
+                          size={22}
+                          strokeWidth={2}
+                          style={{ color: "oklch(0.55 0.04 22)" }}
+                          aria-label="Out of stock"
+                        />
+                      )}
                     </button>
                   );
                 })}
@@ -425,7 +374,7 @@ export default function TapeInsSection() {
                   className="font-['Cormorant_Garamond'] text-sm italic mt-1"
                   style={{ color: "oklch(0.62 0.02 60)" }}
                 >
-                  Free U.S. shipping on orders over $150 · Tracking emailed within 24 hrs.
+                  Calculated from your order date · Tracking emailed within 24 hrs.
                 </p>
               </div>
             </div>

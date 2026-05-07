@@ -108,7 +108,7 @@ export default function Footer() {
               {[
                 { icon: Instagram, label: "Instagram" },
                 { icon: Facebook, label: "Facebook" },
-                { icon: Mail, label: "Email", href: "mailto:hello@psimshair.com" },
+                { icon: Mail, label: "Email", href: "mailto:psimmshairboutique@gmail.com" },
               ].map((s) => {
                 const Icon = s.icon;
                 return (
@@ -148,7 +148,7 @@ export default function Footer() {
             {/* Contact quick links */}
             <div className="flex flex-col gap-2">
               <a
-                href="tel:+14045550190"
+                href="tel:+17703835824"
                 className="flex items-center gap-2 font-['Cormorant_Garamond'] text-sm transition-colors"
                 style={{ color: "oklch(0.60 0.02 60)" }}
                 onMouseEnter={(e) => {
@@ -159,10 +159,10 @@ export default function Footer() {
                 }}
               >
                 <Phone size={12} />
-                (404) 555-0190
+                (770) 383-5824
               </a>
               <a
-                href="mailto:hello@psimshair.com"
+                href="mailto:psimmshairboutique@gmail.com"
                 className="flex items-center gap-2 font-['Cormorant_Garamond'] text-sm transition-colors"
                 style={{ color: "oklch(0.60 0.02 60)" }}
                 onMouseEnter={(e) => {
@@ -173,7 +173,7 @@ export default function Footer() {
                 }}
               >
                 <Mail size={12} />
-                hello@psimshair.com
+                psimmshairboutique@gmail.com
               </a>
             </div>
           </div>
