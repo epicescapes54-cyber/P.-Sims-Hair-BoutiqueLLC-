@@ -91,7 +91,7 @@ export default function HeroSection() {
                 className="h-px w-8"
                 style={{ background: "oklch(0.68 0.09 22)" }}
               />
-              New Looks · Best Investment
+              Luxury Hair Boutique
               <span
                 className="h-px w-8"
                 style={{ background: "oklch(0.68 0.09 22)" }}
@@ -107,7 +107,7 @@ export default function HeroSection() {
                 className="font-['Playfair_Display'] leading-[1.1] font-bold"
                 style={{ fontSize: "clamp(2.8rem, 6vw, 5.5rem)", color: "oklch(0.93 0.02 60)" }}
               >
-                Hair That{" "}
+                Elevate Your{" "}
                 <span
                   className="italic"
                   style={{
@@ -118,7 +118,7 @@ export default function HeroSection() {
                     backgroundClip: "text",
                   }}
                 >
-                  Empowers
+                  Crown
                 </span>
               </h1>
             </div>
@@ -132,7 +132,7 @@ export default function HeroSection() {
                 className="font-['Cormorant_Garamond'] text-xl lg:text-2xl font-light leading-relaxed max-w-md"
                 style={{ color: "oklch(0.75 0.03 60)" }}
               >
-                100% virgin Remy human hair extensions, ready-to-wear wigs, and bespoke salon services — crafted to remind every woman she is never alone in feeling her most beautiful.
+                Premium hair extensions, luxury wigs, and bespoke hair care — curated for the woman who demands excellence.
               </p>
             </div>
 
@@ -199,8 +199,8 @@ export default function HeroSection() {
             >
               {[
                 { num: "500+", label: "Happy Clients" },
-                { num: "10+", label: "Years of Craft" },
-                { num: "100%", label: "Virgin Remy Hair" },
+                { num: "10+", label: "Years Experience" },
+                { num: "100%", label: "Premium Quality" },
               ].map((stat) => (
                 <div key={stat.label} className="flex flex-col">
                   <span
