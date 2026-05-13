@@ -132,22 +132,10 @@ export default function ServicesSection() {
             return (
               <div
                 key={service.title}
-                className="reveal group relative p-8 transition-all duration-300"
+                className="reveal card-deco group relative p-8"
                 style={{
                   background: "oklch(0.11 0.005 285 / 0.9)",
-                  border: "1px solid oklch(0.68 0.09 22 / 20%)",
                   transitionDelay: `${i * 100}ms`,
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor =
-                    "oklch(0.68 0.09 22 / 55%)";
-                  (e.currentTarget as HTMLElement).style.boxShadow =
-                    "0 0 40px oklch(0.68 0.09 22 / 12%)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor =
-                    "oklch(0.68 0.09 22 / 20%)";
-                  (e.currentTarget as HTMLElement).style.boxShadow = "none";
                 }}
               >
                 {/* Top row */}
@@ -194,15 +182,12 @@ export default function ServicesSection() {
                 </p>
 
                 <button
-                  onClick={() => toast("Booking system coming soon! Call us to schedule.")}
-                  className="font-['Josefin_Sans'] text-[0.65rem] tracking-[0.2em] uppercase flex items-center gap-2 transition-colors duration-200"
-                  style={{ color: "oklch(0.68 0.09 22)" }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.color = "oklch(0.80 0.07 22)";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.color = "oklch(0.68 0.09 22)";
-                  }}
+                  onClick={() =>
+                    toast(`To book ${service.title}, call (770) 383-5824`, {
+                      description: "Online booking coming soon.",
+                    })
+                  }
+                  className="book-service-link font-['Josefin_Sans'] text-[0.65rem] tracking-[0.2em] uppercase flex items-center gap-2"
                 >
                   Book This Service
                   <span

@@ -249,6 +249,22 @@
     box-shadow: 0 0 30px oklch(0.68 0.09 22 / 15%);
   }
 
+  /* Rose gold inline link/button (used inside cards) */
+  .book-service-link {
+    color: oklch(0.68 0.09 22);
+    transition: color 0.2s ease;
+    outline: none;
+  }
+
+  .book-service-link:hover {
+    color: oklch(0.80 0.07 22);
+  }
+
+  .book-service-link:focus-visible {
+    color: oklch(0.80 0.07 22);
+    box-shadow: 0 0 0 2px oklch(0.68 0.09 22 / 60%);
+  }
+
   /* Section label style */
   .section-label {
     font-family: 'Josefin Sans', sans-serif;
