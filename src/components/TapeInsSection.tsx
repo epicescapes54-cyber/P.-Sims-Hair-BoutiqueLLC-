@@ -8,8 +8,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Truck, Info, Sparkles, ShieldCheck, ShoppingBag, X } from "lucide-react";
 import { toast } from "sonner";
 
-const TAPE_IMG =
-  "https://images.unsplash.com/photo-1560869713-7d0a29430803?w=900&h=1100&fit=crop";
+const TAPE_IMG = "/images/gallery/photo-12.jpg";
 
 const textures = ["Straight", "Loose Wave", "Body Wave"] as const;
 

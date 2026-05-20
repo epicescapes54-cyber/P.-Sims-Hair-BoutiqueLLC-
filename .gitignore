@@ -5,3 +5,9 @@ dist
 .env.*.local
 *.tsbuildinfo
 .vercel
+
+# macOS
+.DS_Store
+
+# Raw source photos (originals live outside the repo; gallery copies are committed)
+phsb photos/

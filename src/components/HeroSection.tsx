@@ -7,10 +7,8 @@
 import { useEffect, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 
-const HERO_IMG =
-  "https://d2xsxph8kpxj0f.cloudfront.net/310519663427685673/fHpYESz6PQmULupxkcDoCU/hero-main-SeVPLgEyx6kJcp9ex9f6Yw.webp";
-const PORTRAIT_IMG =
-  "https://d2xsxph8kpxj0f.cloudfront.net/310519663427685673/fHpYESz6PQmULupxkcDoCU/hero-portrait-nZLYZGwMs8LbcawxjCieue.webp";
+const HERO_IMG = "/images/gallery/photo-01.jpg";
+const PORTRAIT_IMG = "/images/gallery/photo-02.jpg";
 
 export default function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);

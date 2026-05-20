@@ -7,8 +7,7 @@ import { useEffect, useRef } from "react";
 import { Scissors, Sparkles, Crown, Star, Clock, Phone } from "lucide-react";
 import { toast } from "sonner";
 
-const SALON_IMG =
-  "https://d2xsxph8kpxj0f.cloudfront.net/310519663427685673/fHpYESz6PQmULupxkcDoCU/salon-interior-kg4GwMm6Q2i4ZmhYQWpEUa.webp";
+const SALON_IMG = "/images/gallery/photo-11.jpg";
 
 const services = [
   {

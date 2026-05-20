@@ -6,8 +6,7 @@
 import { useEffect, useRef } from "react";
 import { Award, Heart, Gem } from "lucide-react";
 
-const TEXTURE_IMG =
-  "https://d2xsxph8kpxj0f.cloudfront.net/310519663427685673/fHpYESz6PQmULupxkcDoCU/texture-bg-AZxTdajKNKLPLqHt8kaJEj.webp";
+const TEXTURE_IMG = "/images/gallery/photo-10.jpg";
 
 const values = [
   {

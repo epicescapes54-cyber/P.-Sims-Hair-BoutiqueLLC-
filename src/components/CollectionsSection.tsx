@@ -7,8 +7,7 @@ import { useEffect, useRef } from "react";
 import { ShoppingBag, Eye } from "lucide-react";
 import { toast } from "sonner";
 
-const PRODUCTS_IMG =
-  "https://d2xsxph8kpxj0f.cloudfront.net/310519663427685673/fHpYESz6PQmULupxkcDoCU/products-banner-ktaw88KDxmaM3mWVCaFzkS.webp";
+const PRODUCTS_IMG = "/images/gallery/photo-03.jpg";
 
 const collections = [
   {
@@ -19,7 +18,7 @@ const collections = [
     originalPrice: "$240",
     description: "100% virgin Remy human hair. Silky smooth, tangle-free, and full of body.",
     badge: "Bestseller",
-    img: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&h=500&fit=crop",
+    img: "/images/gallery/photo-04.jpg",
   },
   {
     id: 2,
@@ -29,7 +28,7 @@ const collections = [
     originalPrice: null,
     description: "Pre-plucked HD lace front wig with natural hairline. 180% density.",
     badge: "New Arrival",
-    img: "https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=400&h=500&fit=crop",
+    img: "/images/gallery/photo-05.jpg",
   },
   {
     id: 3,
@@ -39,7 +38,7 @@ const collections = [
     originalPrice: "$160",
     description: "5x5 HD lace closure with deep wave pattern. Bleached knots.",
     badge: null,
-    img: "https://images.unsplash.com/photo-1519699047748-de8e457a634e?w=400&h=500&fit=crop",
+    img: "/images/gallery/photo-06.jpg",
   },
   {
     id: 4,
@@ -49,7 +48,7 @@ const collections = [
     originalPrice: null,
     description: "Argan oil & keratin infused serum for ultimate shine and repair.",
     badge: "Limited",
-    img: "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=400&h=500&fit=crop",
+    img: "/images/gallery/photo-07.jpg",
   },
   {
     id: 5,
@@ -59,7 +58,7 @@ const collections = [
     originalPrice: null,
     description: "Natural kinky curly texture. Blends seamlessly with natural hair.",
     badge: null,
-    img: "https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=400&h=500&fit=crop",
+    img: "/images/gallery/photo-08.jpg",
   },
   {
     id: 6,
@@ -69,7 +68,7 @@ const collections = [
     originalPrice: "$450",
     description: "Full lace wig with loose deep wave pattern. 13x6 lace frontal.",
     badge: "Sale",
-    img: "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=400&h=500&fit=crop",
+    img: "/images/gallery/photo-09.jpg",
   },
 ];
 
