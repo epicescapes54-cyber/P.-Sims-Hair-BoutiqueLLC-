@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>P. Sims — Photo Picker</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; background: #14100e; color: #f3e9e2; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  header { padding: 28px 24px 8px; }
+  h1 { margin: 0 0 4px; font-size: 22px; letter-spacing: .5px; }
+  p.sub { margin: 0; color: #b9a89c; font-size: 14px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 18px; padding: 24px; }
+  figure { margin: 0; background: #1e1916; border: 1px solid #2e2723; border-radius: 12px; overflow: hidden; }
+  figure.used { border-color: #b97f5e; }
+  img { display: block; width: 100%; height: 280px; object-fit: cover; background: #000; }
+  figcaption { padding: 10px 12px; font-size: 13px; }
+  .num { font-weight: 700; font-size: 15px; }
+  .use { display: block; margin-top: 3px; color: #c8a; font-size: 12px; }
+  .use.free { color: #7fae7f; }
+</style>
+</head>
+<body>
+  <header>
+    <h1>P. Sims Hair Boutique — Photo Picker</h1>
+    <p class="sub">All 29 gallery photos, numbered. Rose-gold border = already used on the site. Tell Claude which number to use where.</p>
+  </header>
+  <div class="grid" id="grid"></div>
+  <script>
+    const used = {
+      1: "Hero — main", 2: "Hero — portrait", 3: "Collections — banner",
+      4: "Silky Straight Bundle", 5: "Body Wave Lace Front", 6: "Deep Wave Closure",
+      7: "Luxury Repair Serum", 8: "Kinky Curly Bundle", 9: "Loose Deep Wave Wig",
+      10: "About — texture", 11: "Services — salon", 12: "Tape-Ins"
+    };
+    const grid = document.getElementById("grid");
+    for (let i = 1; i <= 29; i++) {
+      const n = String(i).padStart(2, "0");
+      const isUsed = used[i];
+      grid.insertAdjacentHTML("beforeend", `
+        <figure class="${isUsed ? "used" : ""}">
+          <img loading="lazy" src="/images/gallery/photo-${n}.jpg" alt="photo ${n}" />
+          <figcaption>
+            <span class="num">photo-${n}</span>
+            <span class="use ${isUsed ? "" : "free"}">${isUsed || "available"}</span>
+          </figcaption>
+        </figure>`);
+    }
+  </script>
+</body>
+</html>

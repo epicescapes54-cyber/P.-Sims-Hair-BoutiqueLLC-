@@ -3,13 +3,26 @@
    Product grid with rose gold card borders, hover glow effects.
    ============================================================================= */
 
-import { useEffect, useRef } from "react";
-import { ShoppingBag, Eye } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ShoppingBag, Eye, Sparkles, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { toast } from "sonner";
 
 const PRODUCTS_IMG = "/images/gallery/photo-03.jpg";
 
-const collections = [
+type Product = {
+  id: number;
+  name: string;
+  category: string;
+  price: string;
+  originalPrice: string | null;
+  description: string;
+  badge: string | null;
+  img: string;
+  gallery?: string[];
+  comingSoon?: boolean;
+};
+
+const collections: Product[] = [
   {
     id: 1,
     name: "Silky Straight Bundle",
@@ -18,7 +31,13 @@ const collections = [
     originalPrice: "$240",
     description: "100% virgin Remy human hair. Silky smooth, tangle-free, and full of body.",
     badge: "Bestseller",
-    img: "/images/gallery/photo-04.jpg",
+    img: "/images/gallery/photo-15.jpg",
+    gallery: [
+      "/images/gallery/photo-15.jpg",
+      "/images/gallery/photo-13.jpg",
+      "/images/gallery/photo-14.jpg",
+      "/images/gallery/photo-16.jpg",
+    ],
   },
   {
     id: 2,
@@ -29,6 +48,12 @@ const collections = [
     description: "Pre-plucked HD lace front wig with natural hairline. 180% density.",
     badge: "New Arrival",
     img: "/images/gallery/photo-05.jpg",
+    gallery: [
+      "/images/gallery/photo-05.jpg",
+      "/images/gallery/photo-17.jpg",
+      "/images/gallery/photo-18.jpg",
+      "/images/gallery/photo-19.jpg",
+    ],
   },
   {
     id: 3,
@@ -39,6 +64,12 @@ const collections = [
     description: "5x5 HD lace closure with deep wave pattern. Bleached knots.",
     badge: null,
     img: "/images/gallery/photo-06.jpg",
+    gallery: [
+      "/images/gallery/photo-06.jpg",
+      "/images/gallery/photo-20.jpg",
+      "/images/gallery/photo-21.jpg",
+      "/images/gallery/photo-22.jpg",
+    ],
   },
   {
     id: 4,
@@ -49,6 +80,7 @@ const collections = [
     description: "Argan oil & keratin infused serum for ultimate shine and repair.",
     badge: "Limited",
     img: "/images/gallery/photo-07.jpg",
+    comingSoon: true,
   },
   {
     id: 5,
@@ -59,6 +91,12 @@ const collections = [
     description: "Natural kinky curly texture. Blends seamlessly with natural hair.",
     badge: null,
     img: "/images/gallery/photo-08.jpg",
+    gallery: [
+      "/images/gallery/photo-08.jpg",
+      "/images/gallery/photo-23.jpg",
+      "/images/gallery/photo-24.jpg",
+      "/images/gallery/photo-25.jpg",
+    ],
   },
   {
     id: 6,
@@ -68,7 +106,13 @@ const collections = [
     originalPrice: "$450",
     description: "Full lace wig with loose deep wave pattern. 13x6 lace frontal.",
     badge: "Sale",
-    img: "/images/gallery/photo-09.jpg",
+    img: "/images/gallery/photo-02.jpg",
+    gallery: [
+      "/images/gallery/photo-02.jpg",
+      "/images/gallery/photo-26.jpg",
+      "/images/gallery/photo-28.jpg",
+      "/images/gallery/photo-29.jpg",
+    ],
   },
 ];
 
@@ -81,6 +125,33 @@ const badgeColors: Record<string, string> = {
 
 export default function CollectionsSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
+
+  const [lightbox, setLightbox] = useState<{
+    photos: string[];
+    name: string;
+    index: number;
+  } | null>(null);
+
+  const openLightbox = (product: Product) => {
+    const photos = product.gallery?.length ? product.gallery : [product.img];
+    setLightbox({ photos, name: product.name, index: 0 });
+  };
+  const closeLightbox = () => setLightbox(null);
+  const step = (dir: number) =>
+    setLightbox((lb) =>
+      lb ? { ...lb, index: (lb.index + dir + lb.photos.length) % lb.photos.length } : lb
+    );
+
+  useEffect(() => {
+    if (!lightbox) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeLightbox();
+      else if (e.key === "ArrowRight") step(1);
+      else if (e.key === "ArrowLeft") step(-1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [lightbox]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -216,37 +287,62 @@ export default function CollectionsSection() {
 
               {/* Image */}
               <div className="relative overflow-hidden" style={{ height: "280px" }}>
-                <img
-                  src={product.img}
-                  alt={product.name}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3"
-                  style={{ background: "oklch(0.06 0.004 285 / 0.7)" }}
-                >
-                  <button
-                    onClick={() => toast(`Added "${product.name}" to cart!`)}
-                    className="p-3 transition-all duration-200 hover:scale-110"
-                    style={{
-                      background: "oklch(0.68 0.09 22)",
-                      color: "oklch(0.08 0.004 285)",
-                    }}
+                {product.comingSoon ? (
+                  <div
+                    className="w-full h-full flex flex-col items-center justify-center gap-3 text-center px-4"
+                    style={{ background: "oklch(0.13 0.006 285)" }}
                   >
-                    <ShoppingBag size={18} />
-                  </button>
-                  <button
-                    onClick={() => toast(`Viewing "${product.name}" — Full details coming soon!`)}
-                    className="p-3 transition-all duration-200 hover:scale-110"
-                    style={{
-                      background: "oklch(0.16 0.006 285)",
-                      border: "1px solid oklch(0.68 0.09 22 / 50%)",
-                      color: "oklch(0.80 0.07 22)",
-                    }}
-                  >
-                    <Eye size={18} />
-                  </button>
-                </div>
+                    <Sparkles size={30} style={{ color: "oklch(0.68 0.09 22)" }} />
+                    <span
+                      className="font-['Playfair_Display'] text-2xl font-bold"
+                      style={{ color: "oklch(0.85 0.07 22)" }}
+                    >
+                      Coming Soon
+                    </span>
+                    <span
+                      className="font-['Josefin_Sans'] text-[0.6rem] tracking-[0.25em] uppercase"
+                      style={{ color: "oklch(0.55 0.02 60)" }}
+                    >
+                      Restocking shortly
+                    </span>
+                  </div>
+                ) : (
+                  <>
+                    <img
+                      src={product.img}
+                      alt={product.name}
+                      onClick={() => openLightbox(product)}
+                      className="w-full h-full object-cover cursor-pointer transition-transform duration-700 group-hover:scale-110"
+                    />
+                    <div
+                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3 pointer-events-none"
+                      style={{ background: "oklch(0.06 0.004 285 / 0.7)" }}
+                    >
+                      <button
+                        onClick={() => toast(`Added "${product.name}" to cart!`)}
+                        className="p-3 transition-all duration-200 hover:scale-110 pointer-events-auto"
+                        style={{
+                          background: "oklch(0.68 0.09 22)",
+                          color: "oklch(0.08 0.004 285)",
+                        }}
+                      >
+                        <ShoppingBag size={18} />
+                      </button>
+                      <button
+                        onClick={() => openLightbox(product)}
+                        aria-label={`View ${product.name} photos`}
+                        className="p-3 transition-all duration-200 hover:scale-110 pointer-events-auto"
+                        style={{
+                          background: "oklch(0.16 0.006 285)",
+                          border: "1px solid oklch(0.68 0.09 22 / 50%)",
+                          color: "oklch(0.80 0.07 22)",
+                        }}
+                      >
+                        <Eye size={18} />
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
 
               {/* Info */}
@@ -328,6 +424,83 @@ export default function CollectionsSection() {
           </button>
         </div>
       </div>
+
+      {/* Lightbox gallery */}
+      {lightbox && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ background: "oklch(0.04 0.004 285 / 0.92)" }}
+          onClick={closeLightbox}
+        >
+          <button
+            onClick={closeLightbox}
+            aria-label="Close gallery"
+            className="absolute top-5 right-5 p-2 transition-transform hover:scale-110"
+            style={{ color: "oklch(0.85 0.07 22)" }}
+          >
+            <X size={28} />
+          </button>
+
+          <div className="relative w-full max-w-3xl" onClick={(e) => e.stopPropagation()}>
+            <div
+              className="relative overflow-hidden"
+              style={{ border: "1px solid oklch(0.68 0.09 22 / 35%)" }}
+            >
+              <img
+                src={lightbox.photos[lightbox.index]}
+                alt={lightbox.name}
+                className="w-full max-h-[72vh] object-contain"
+                style={{ background: "oklch(0.06 0.004 285)" }}
+              />
+
+              {lightbox.photos.length > 1 && (
+                <>
+                  <button
+                    onClick={() => step(-1)}
+                    aria-label="Previous photo"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 p-2 transition-transform hover:scale-110"
+                    style={{ background: "oklch(0.08 0.004 285 / 0.6)", color: "oklch(0.85 0.07 22)" }}
+                  >
+                    <ChevronLeft size={26} />
+                  </button>
+                  <button
+                    onClick={() => step(1)}
+                    aria-label="Next photo"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-2 transition-transform hover:scale-110"
+                    style={{ background: "oklch(0.08 0.004 285 / 0.6)", color: "oklch(0.85 0.07 22)" }}
+                  >
+                    <ChevronRight size={26} />
+                  </button>
+                </>
+              )}
+            </div>
+
+            <p
+              className="text-center mt-4 font-['Playfair_Display'] text-xl font-semibold"
+              style={{ color: "oklch(0.93 0.02 60)" }}
+            >
+              {lightbox.name}
+            </p>
+
+            {lightbox.photos.length > 1 && (
+              <div className="flex justify-center gap-2 mt-3">
+                {lightbox.photos.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setLightbox((lb) => (lb ? { ...lb, index: idx } : lb))}
+                    aria-label={`Go to photo ${idx + 1}`}
+                    className="w-2.5 h-2.5 rounded-full transition-all"
+                    style={{
+                      background:
+                        idx === lightbox.index ? "oklch(0.68 0.09 22)" : "oklch(0.40 0.02 60)",
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </section>
   );
 }

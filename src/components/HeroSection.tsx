@@ -7,7 +7,7 @@
 import { useEffect, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 
-const HERO_IMG = "/images/gallery/photo-01.jpg";
+const HERO_IMG = "/images/gallery/photo-27.jpg";
 const PORTRAIT_IMG = "/images/gallery/photo-02.jpg";
 
 export default function HeroSection() {
