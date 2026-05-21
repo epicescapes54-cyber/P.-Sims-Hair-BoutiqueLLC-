@@ -4,7 +4,7 @@
    ============================================================================= */
 
 import { useEffect, useRef, useState } from "react";
-import { ShoppingBag, Eye, Sparkles, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { ShoppingBag, Sparkles, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { toast } from "sonner";
 
 const PRODUCTS_IMG = "/images/gallery/photo-03.jpg";
@@ -19,6 +19,7 @@ type Product = {
   badge: string | null;
   img: string;
   gallery?: string[];
+  lengths?: { in: number; price: number }[];
   comingSoon?: boolean;
 };
 
@@ -38,6 +39,15 @@ const collections: Product[] = [
       "/images/gallery/photo-14.jpg",
       "/images/gallery/photo-16.jpg",
     ],
+    lengths: [
+      { in: 12, price: 189 },
+      { in: 14, price: 209 },
+      { in: 16, price: 229 },
+      { in: 18, price: 259 },
+      { in: 20, price: 289 },
+      { in: 22, price: 319 },
+      { in: 24, price: 349 },
+    ],
   },
   {
     id: 2,
@@ -54,6 +64,15 @@ const collections: Product[] = [
       "/images/gallery/photo-18.jpg",
       "/images/gallery/photo-19.jpg",
     ],
+    lengths: [
+      { in: 12, price: 349 },
+      { in: 14, price: 379 },
+      { in: 16, price: 409 },
+      { in: 18, price: 449 },
+      { in: 20, price: 489 },
+      { in: 22, price: 529 },
+      { in: 24, price: 579 },
+    ],
   },
   {
     id: 3,
@@ -69,6 +88,12 @@ const collections: Product[] = [
       "/images/gallery/photo-20.jpg",
       "/images/gallery/photo-21.jpg",
       "/images/gallery/photo-22.jpg",
+    ],
+    lengths: [
+      { in: 12, price: 129 },
+      { in: 14, price: 149 },
+      { in: 16, price: 169 },
+      { in: 18, price: 199 },
     ],
   },
   {
@@ -97,6 +122,15 @@ const collections: Product[] = [
       "/images/gallery/photo-24.jpg",
       "/images/gallery/photo-25.jpg",
     ],
+    lengths: [
+      { in: 12, price: 199 },
+      { in: 14, price: 219 },
+      { in: 16, price: 239 },
+      { in: 18, price: 269 },
+      { in: 20, price: 299 },
+      { in: 22, price: 329 },
+      { in: 24, price: 359 },
+    ],
   },
   {
     id: 6,
@@ -113,6 +147,14 @@ const collections: Product[] = [
       "/images/gallery/photo-28.jpg",
       "/images/gallery/photo-29.jpg",
     ],
+    lengths: [
+      { in: 14, price: 399 },
+      { in: 16, price: 429 },
+      { in: 18, price: 469 },
+      { in: 20, price: 509 },
+      { in: 22, price: 559 },
+      { in: 24, price: 609 },
+    ],
   },
 ];
 
@@ -126,32 +168,29 @@ const badgeColors: Record<string, string> = {
 export default function CollectionsSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  const [lightbox, setLightbox] = useState<{
-    photos: string[];
-    name: string;
-    index: number;
-  } | null>(null);
+  const [shopProduct, setShopProduct] = useState<Product | null>(null);
+  const [imgIndex, setImgIndex] = useState(0);
+  const [lengthIndex, setLengthIndex] = useState(0);
 
-  const openLightbox = (product: Product) => {
-    const photos = product.gallery?.length ? product.gallery : [product.img];
-    setLightbox({ photos, name: product.name, index: 0 });
+  const openShop = (product: Product) => {
+    setShopProduct(product);
+    setImgIndex(0);
+    setLengthIndex(0);
   };
-  const closeLightbox = () => setLightbox(null);
-  const step = (dir: number) =>
-    setLightbox((lb) =>
-      lb ? { ...lb, index: (lb.index + dir + lb.photos.length) % lb.photos.length } : lb
-    );
+  const closeShop = () => setShopProduct(null);
 
   useEffect(() => {
-    if (!lightbox) return;
+    if (!shopProduct) return;
+    const photos = shopProduct.gallery?.length ? shopProduct.gallery : [shopProduct.img];
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeLightbox();
-      else if (e.key === "ArrowRight") step(1);
-      else if (e.key === "ArrowLeft") step(-1);
+      if (e.key === "Escape") closeShop();
+      else if (e.key === "ArrowRight") setImgIndex((i) => (i + 1) % photos.length);
+      else if (e.key === "ArrowLeft")
+        setImgIndex((i) => (i - 1 + photos.length) % photos.length);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [lightbox]);
+  }, [shopProduct]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -311,34 +350,22 @@ export default function CollectionsSection() {
                     <img
                       src={product.img}
                       alt={product.name}
-                      onClick={() => openLightbox(product)}
+                      onClick={() => openShop(product)}
                       className="w-full h-full object-cover cursor-pointer transition-transform duration-700 group-hover:scale-110"
                     />
                     <div
-                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3 pointer-events-none"
+                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none"
                       style={{ background: "oklch(0.06 0.004 285 / 0.7)" }}
                     >
                       <button
-                        onClick={() => toast(`Added "${product.name}" to cart!`)}
-                        className="p-3 transition-all duration-200 hover:scale-110 pointer-events-auto"
+                        onClick={() => openShop(product)}
+                        className="flex items-center gap-2 px-5 py-2.5 font-['Josefin_Sans'] text-[0.65rem] tracking-[0.2em] uppercase transition-all duration-200 hover:scale-105 pointer-events-auto"
                         style={{
                           background: "oklch(0.68 0.09 22)",
                           color: "oklch(0.08 0.004 285)",
                         }}
                       >
-                        <ShoppingBag size={18} />
-                      </button>
-                      <button
-                        onClick={() => openLightbox(product)}
-                        aria-label={`View ${product.name} photos`}
-                        className="p-3 transition-all duration-200 hover:scale-110 pointer-events-auto"
-                        style={{
-                          background: "oklch(0.16 0.006 285)",
-                          border: "1px solid oklch(0.68 0.09 22 / 50%)",
-                          color: "oklch(0.80 0.07 22)",
-                        }}
-                      >
-                        <Eye size={18} />
+                        <ShoppingBag size={16} /> Shop Now
                       </button>
                     </div>
                   </>
@@ -367,12 +394,29 @@ export default function CollectionsSection() {
                 </p>
                 <div className="flex items-center justify-between">
                   <div className="flex items-baseline gap-2">
-                    <span
-                      className="font-['Playfair_Display'] text-xl font-bold"
-                      style={{ color: "oklch(0.80 0.07 22)" }}
-                    >
-                      {product.price}
-                    </span>
+                    {product.lengths?.length ? (
+                      <>
+                        <span
+                          className="font-['Cormorant_Garamond'] text-xs italic"
+                          style={{ color: "oklch(0.55 0.02 60)" }}
+                        >
+                          from
+                        </span>
+                        <span
+                          className="font-['Playfair_Display'] text-xl font-bold"
+                          style={{ color: "oklch(0.80 0.07 22)" }}
+                        >
+                          ${Math.min(...product.lengths.map((l) => l.price))}
+                        </span>
+                      </>
+                    ) : (
+                      <span
+                        className="font-['Playfair_Display'] text-xl font-bold"
+                        style={{ color: "oklch(0.80 0.07 22)" }}
+                      >
+                        {product.price}
+                      </span>
+                    )}
                     {product.originalPrice && (
                       <span
                         className="font-['Cormorant_Garamond'] text-sm line-through"
@@ -382,23 +426,32 @@ export default function CollectionsSection() {
                       </span>
                     )}
                   </div>
-                  <button
-                    onClick={() => toast(`Added "${product.name}" to cart!`)}
-                    className="font-['Josefin_Sans'] text-[0.6rem] tracking-[0.15em] uppercase px-4 py-2 transition-all duration-200"
-                    style={{
-                      border: "1px solid oklch(0.68 0.09 22 / 60%)",
-                      color: "oklch(0.80 0.07 22)",
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.background =
-                        "oklch(0.68 0.09 22 / 15%)";
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLElement).style.background = "transparent";
-                    }}
-                  >
-                    Add to Cart
-                  </button>
+                  {product.comingSoon ? (
+                    <span
+                      className="font-['Josefin_Sans'] text-[0.6rem] tracking-[0.15em] uppercase px-4 py-2"
+                      style={{ color: "oklch(0.55 0.02 60)" }}
+                    >
+                      Coming Soon
+                    </span>
+                  ) : (
+                    <button
+                      onClick={() => openShop(product)}
+                      className="font-['Josefin_Sans'] text-[0.6rem] tracking-[0.15em] uppercase px-4 py-2 transition-all duration-200"
+                      style={{
+                        border: "1px solid oklch(0.68 0.09 22 / 60%)",
+                        color: "oklch(0.80 0.07 22)",
+                      }}
+                      onMouseEnter={(e) => {
+                        (e.currentTarget as HTMLElement).style.background =
+                          "oklch(0.68 0.09 22 / 15%)";
+                      }}
+                      onMouseLeave={(e) => {
+                        (e.currentTarget as HTMLElement).style.background = "transparent";
+                      }}
+                    >
+                      Shop Now
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -425,82 +478,221 @@ export default function CollectionsSection() {
         </div>
       </div>
 
-      {/* Lightbox gallery */}
-      {lightbox && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          style={{ background: "oklch(0.04 0.004 285 / 0.92)" }}
-          onClick={closeLightbox}
-        >
-          <button
-            onClick={closeLightbox}
-            aria-label="Close gallery"
-            className="absolute top-5 right-5 p-2 transition-transform hover:scale-110"
-            style={{ color: "oklch(0.85 0.07 22)" }}
-          >
-            <X size={28} />
-          </button>
-
-          <div className="relative w-full max-w-3xl" onClick={(e) => e.stopPropagation()}>
+      {/* Shop Now — product detail */}
+      {shopProduct &&
+        (() => {
+          const photos = shopProduct.gallery?.length
+            ? shopProduct.gallery
+            : [shopProduct.img];
+          const lens = shopProduct.lengths ?? [];
+          const selected = lens[lengthIndex];
+          return (
             <div
-              className="relative overflow-hidden"
-              style={{ border: "1px solid oklch(0.68 0.09 22 / 35%)" }}
+              className="fixed inset-0 z-50 flex items-start sm:items-center justify-center p-4 overflow-y-auto"
+              style={{ background: "oklch(0.04 0.004 285 / 0.92)" }}
+              onClick={closeShop}
             >
-              <img
-                src={lightbox.photos[lightbox.index]}
-                alt={lightbox.name}
-                className="w-full max-h-[72vh] object-contain"
-                style={{ background: "oklch(0.06 0.004 285)" }}
-              />
+              <div
+                className="relative w-full max-w-4xl my-auto grid grid-cols-1 md:grid-cols-2"
+                onClick={(e) => e.stopPropagation()}
+                style={{
+                  background: "oklch(0.10 0.005 285)",
+                  border: "1px solid oklch(0.68 0.09 22 / 30%)",
+                }}
+              >
+                <button
+                  onClick={closeShop}
+                  aria-label="Close"
+                  className="absolute top-3 right-3 z-10 p-2 transition-transform hover:scale-110"
+                  style={{
+                    background: "oklch(0.08 0.004 285 / 0.6)",
+                    color: "oklch(0.85 0.07 22)",
+                  }}
+                >
+                  <X size={22} />
+                </button>
 
-              {lightbox.photos.length > 1 && (
-                <>
-                  <button
-                    onClick={() => step(-1)}
-                    aria-label="Previous photo"
-                    className="absolute left-3 top-1/2 -translate-y-1/2 p-2 transition-transform hover:scale-110"
-                    style={{ background: "oklch(0.08 0.004 285 / 0.6)", color: "oklch(0.85 0.07 22)" }}
+                {/* Gallery */}
+                <div style={{ background: "oklch(0.06 0.004 285)" }}>
+                  <div
+                    className="relative overflow-hidden"
+                    style={{ aspectRatio: "4 / 5" }}
                   >
-                    <ChevronLeft size={26} />
-                  </button>
-                  <button
-                    onClick={() => step(1)}
-                    aria-label="Next photo"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-2 transition-transform hover:scale-110"
-                    style={{ background: "oklch(0.08 0.004 285 / 0.6)", color: "oklch(0.85 0.07 22)" }}
+                    <img
+                      src={photos[imgIndex]}
+                      alt={shopProduct.name}
+                      className="w-full h-full object-cover"
+                    />
+                    {photos.length > 1 && (
+                      <>
+                        <button
+                          onClick={() =>
+                            setImgIndex((i) => (i - 1 + photos.length) % photos.length)
+                          }
+                          aria-label="Previous photo"
+                          className="absolute left-2 top-1/2 -translate-y-1/2 p-1.5 transition-transform hover:scale-110"
+                          style={{
+                            background: "oklch(0.08 0.004 285 / 0.6)",
+                            color: "oklch(0.85 0.07 22)",
+                          }}
+                        >
+                          <ChevronLeft size={22} />
+                        </button>
+                        <button
+                          onClick={() => setImgIndex((i) => (i + 1) % photos.length)}
+                          aria-label="Next photo"
+                          className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 transition-transform hover:scale-110"
+                          style={{
+                            background: "oklch(0.08 0.004 285 / 0.6)",
+                            color: "oklch(0.85 0.07 22)",
+                          }}
+                        >
+                          <ChevronRight size={22} />
+                        </button>
+                      </>
+                    )}
+                  </div>
+                  {photos.length > 1 && (
+                    <div className="flex gap-2 p-3 overflow-x-auto">
+                      {photos.map((p, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => setImgIndex(idx)}
+                          aria-label={`Photo ${idx + 1}`}
+                          className="shrink-0 transition-opacity"
+                          style={{
+                            border:
+                              idx === imgIndex
+                                ? "2px solid oklch(0.80 0.07 22)"
+                                : "2px solid transparent",
+                            opacity: idx === imgIndex ? 1 : 0.6,
+                          }}
+                        >
+                          <img src={p} alt="" className="w-12 h-14 object-cover" />
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Details */}
+                <div className="p-6 lg:p-8 flex flex-col">
+                  <span
+                    className="font-['Josefin_Sans'] text-[0.6rem] tracking-[0.25em] uppercase"
+                    style={{ color: "oklch(0.68 0.09 22)" }}
                   >
-                    <ChevronRight size={26} />
-                  </button>
-                </>
-              )}
-            </div>
+                    {shopProduct.category}
+                  </span>
+                  <h3
+                    className="font-['Playfair_Display'] text-2xl lg:text-3xl font-bold mt-1 mb-3"
+                    style={{ color: "oklch(0.95 0.02 60)" }}
+                  >
+                    {shopProduct.name}
+                  </h3>
 
-            <p
-              className="text-center mt-4 font-['Playfair_Display'] text-xl font-semibold"
-              style={{ color: "oklch(0.93 0.02 60)" }}
-            >
-              {lightbox.name}
-            </p>
+                  <div className="flex items-baseline gap-3 mb-4">
+                    <span
+                      className="font-['Playfair_Display'] text-2xl font-bold"
+                      style={{ color: "oklch(0.80 0.07 22)" }}
+                    >
+                      {selected ? `$${selected.price}` : shopProduct.price}
+                    </span>
+                    {shopProduct.originalPrice && (
+                      <span
+                        className="font-['Cormorant_Garamond'] text-base line-through"
+                        style={{ color: "oklch(0.50 0.02 60)" }}
+                      >
+                        {shopProduct.originalPrice}
+                      </span>
+                    )}
+                  </div>
 
-            {lightbox.photos.length > 1 && (
-              <div className="flex justify-center gap-2 mt-3">
-                {lightbox.photos.map((_, idx) => (
+                  <p
+                    className="font-['Cormorant_Garamond'] text-base leading-relaxed mb-6"
+                    style={{ color: "oklch(0.65 0.02 60)" }}
+                  >
+                    {shopProduct.description}
+                  </p>
+
+                  {lens.length > 0 && (
+                    <div className="mb-6">
+                      <div className="flex items-center justify-between mb-2">
+                        <span
+                          className="font-['Josefin_Sans'] text-[0.6rem] tracking-[0.2em] uppercase"
+                          style={{ color: "oklch(0.80 0.07 22)" }}
+                        >
+                          Length
+                        </span>
+                        {selected && (
+                          <span
+                            className="font-['Cormorant_Garamond'] text-sm"
+                            style={{ color: "oklch(0.60 0.02 60)" }}
+                          >
+                            {selected.in}" selected
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {lens.map((l, idx) => {
+                          const active = idx === lengthIndex;
+                          return (
+                            <button
+                              key={l.in}
+                              onClick={() => setLengthIndex(idx)}
+                              className="font-['Playfair_Display'] text-sm font-semibold px-3.5 py-2 transition-all duration-200"
+                              style={{
+                                border: active
+                                  ? "1px solid oklch(0.80 0.07 22)"
+                                  : "1px solid oklch(0.68 0.09 22 / 30%)",
+                                background: active
+                                  ? "oklch(0.68 0.09 22 / 15%)"
+                                  : "transparent",
+                                color: active
+                                  ? "oklch(0.90 0.05 22)"
+                                  : "oklch(0.75 0.03 60)",
+                              }}
+                            >
+                              {l.in}"
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
                   <button
-                    key={idx}
-                    onClick={() => setLightbox((lb) => (lb ? { ...lb, index: idx } : lb))}
-                    aria-label={`Go to photo ${idx + 1}`}
-                    className="w-2.5 h-2.5 rounded-full transition-all"
+                    onClick={() =>
+                      toast(
+                        selected
+                          ? `Added ${shopProduct.name} — ${selected.in}" — $${selected.price} to your bag`
+                          : `Added ${shopProduct.name} to your bag`
+                      )
+                    }
+                    className="w-full flex items-center justify-center gap-2 font-['Josefin_Sans'] text-xs tracking-[0.2em] uppercase py-3.5 mt-auto transition-all duration-200 hover:opacity-90"
                     style={{
-                      background:
-                        idx === lightbox.index ? "oklch(0.68 0.09 22)" : "oklch(0.40 0.02 60)",
+                      background: "oklch(0.68 0.09 22)",
+                      color: "oklch(0.08 0.004 285)",
                     }}
-                  />
-                ))}
+                  >
+                    <ShoppingBag size={16} />
+                    Add to Bag{selected ? ` · $${selected.price}` : ""}
+                  </button>
+
+                  <p
+                    className="font-['Cormorant_Garamond'] text-xs text-center mt-3 leading-relaxed"
+                    style={{ color: "oklch(0.55 0.02 60)" }}
+                  >
+                    Free U.S. shipping over $200. To complete your order, text{" "}
+                    <a href="tel:+17703835824" style={{ color: "oklch(0.80 0.07 22)" }}>
+                      (770) 383-5824
+                    </a>{" "}
+                    or DM us on Instagram.
+                  </p>
+                </div>
               </div>
-            )}
-          </div>
-        </div>
-      )}
+            </div>
+          );
+        })()}
     </section>
   );
 }
