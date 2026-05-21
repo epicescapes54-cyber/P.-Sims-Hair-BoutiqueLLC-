@@ -680,7 +680,8 @@ export default function CollectionsSection() {
                     }}
                   >
                     <ShoppingBag size={16} />
-                    Add to Bag{selected ? ` · $${selected.price}` : ""}
+                    {selected?.checkoutUrl ? "Buy Now" : "Add to Bag"}
+                    {selected ? ` · $${selected.price}` : ""}
                   </button>
 
                   <p
