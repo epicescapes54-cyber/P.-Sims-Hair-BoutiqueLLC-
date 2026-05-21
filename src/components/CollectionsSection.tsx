@@ -19,7 +19,7 @@ type Product = {
   badge: string | null;
   img: string;
   gallery?: string[];
-  lengths?: { in: number; price: number }[];
+  lengths?: { in: number; price: number; checkoutUrl?: string }[];
   comingSoon?: boolean;
 };
 
@@ -661,13 +661,18 @@ export default function CollectionsSection() {
                   )}
 
                   <button
-                    onClick={() =>
-                      toast(
-                        selected
-                          ? `Added ${shopProduct.name} — ${selected.in}" — $${selected.price} to your bag`
-                          : `Added ${shopProduct.name} to your bag`
-                      )
-                    }
+                    onClick={() => {
+                      if (selected?.checkoutUrl) {
+                        // Stripe-hosted secure checkout for the selected length
+                        window.location.href = selected.checkoutUrl;
+                      } else {
+                        toast(
+                          selected
+                            ? `Added ${shopProduct.name} — ${selected.in}" — $${selected.price} to your bag`
+                            : `Added ${shopProduct.name} to your bag`
+                        );
+                      }
+                    }}
                     className="w-full flex items-center justify-center gap-2 font-['Josefin_Sans'] text-xs tracking-[0.2em] uppercase py-3.5 mt-auto transition-all duration-200 hover:opacity-90"
                     style={{
                       background: "oklch(0.68 0.09 22)",
