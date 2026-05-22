@@ -43,7 +43,7 @@ const collections: Product[] = [
       { in: 12, price: 189 },
       { in: 14, price: 209 },
       { in: 16, price: 229 },
-      { in: 18, price: 259 },
+      { in: 18, price: 259, checkoutUrl: "https://buy.stripe.com/00wcMXeECbP0boX0n2fbq00" },
       { in: 20, price: 289 },
       { in: 22, price: 319 },
       { in: 24, price: 349 },
