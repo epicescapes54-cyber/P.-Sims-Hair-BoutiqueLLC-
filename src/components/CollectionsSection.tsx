@@ -17,6 +17,7 @@ type Variant = {
   img: string;
   gallery?: string[];
   lengths: Length[];
+  comingSoon?: boolean;
 };
 
 type Product = {
@@ -46,30 +47,52 @@ function fromPriceOf(product: Product): number | null {
 const collections: Product[] = [
   {
     id: 1,
-    name: "Straight Bundle",
+    name: "Straight · Loose Wave · Body Wave Bundle",
     category: "Hair Extensions",
     price: "$180",
     originalPrice: null,
-    description: "100% virgin Remy human hair. Silky smooth, tangle-free, and full of body.",
+    description: "100% virgin Remy human hair bundles. Choose your texture.",
     badge: "Bestseller",
     img: "/images/gallery/photo-15.jpg",
-    gallery: [
-      "/images/gallery/photo-15.jpg",
-      "/images/gallery/photo-13.jpg",
-      "/images/gallery/photo-14.jpg",
-      "/images/gallery/photo-16.jpg",
-    ],
-    lengths: [
-      { in: 12, price: 180, checkoutUrl: "https://buy.stripe.com/28E7sDgMK7yK0Kjc5Kfbq02" },
-      { in: 14, price: 185, checkoutUrl: "https://buy.stripe.com/dRmdR1aomaKW0Kj8Tyfbq03" },
-      { in: 16, price: 190, checkoutUrl: "https://buy.stripe.com/14A14f542bP0dx54Difbq04" },
-      { in: 18, price: 195, checkoutUrl: "https://buy.stripe.com/9B67sDfIGcT4ct16Lqfbq05" },
-      { in: 20, price: 200, checkoutUrl: "https://buy.stripe.com/3cI9ALdAyf1c64DedSfbq06" },
-      { in: 22, price: 210, checkoutUrl: "https://buy.stripe.com/7sY14feECg5g64D7Pufbq07" },
-      { in: 24, price: 220, checkoutUrl: "https://buy.stripe.com/5kQaEP2VU6uG0Kj5Hmfbq09" },
-      { in: 26, price: 230, checkoutUrl: "https://buy.stripe.com/dRm6ozgMK7yKct10n2fbq08" },
-      { in: 28, price: 240, checkoutUrl: "https://buy.stripe.com/8x24grgMKcT478H2vafbq0a" },
-      { in: 30, price: 250, checkoutUrl: "https://buy.stripe.com/fZu28j8ge4myct18Tyfbq0b" },
+    variants: [
+      {
+        name: "Straight",
+        description:
+          "Silky straight 100% virgin Remy human hair — smooth, tangle-free, and full of body.",
+        img: "/images/gallery/photo-15.jpg",
+        gallery: [
+          "/images/gallery/photo-15.jpg",
+          "/images/gallery/photo-13.jpg",
+          "/images/gallery/photo-14.jpg",
+          "/images/gallery/photo-16.jpg",
+        ],
+        lengths: [
+          { in: 12, price: 180, checkoutUrl: "https://buy.stripe.com/28E7sDgMK7yK0Kjc5Kfbq02" },
+          { in: 14, price: 185, checkoutUrl: "https://buy.stripe.com/dRmdR1aomaKW0Kj8Tyfbq03" },
+          { in: 16, price: 190, checkoutUrl: "https://buy.stripe.com/14A14f542bP0dx54Difbq04" },
+          { in: 18, price: 195, checkoutUrl: "https://buy.stripe.com/9B67sDfIGcT4ct16Lqfbq05" },
+          { in: 20, price: 200, checkoutUrl: "https://buy.stripe.com/3cI9ALdAyf1c64DedSfbq06" },
+          { in: 22, price: 210, checkoutUrl: "https://buy.stripe.com/7sY14feECg5g64D7Pufbq07" },
+          { in: 24, price: 220, checkoutUrl: "https://buy.stripe.com/5kQaEP2VU6uG0Kj5Hmfbq09" },
+          { in: 26, price: 230, checkoutUrl: "https://buy.stripe.com/dRm6ozgMK7yKct10n2fbq08" },
+          { in: 28, price: 240, checkoutUrl: "https://buy.stripe.com/8x24grgMKcT478H2vafbq0a" },
+          { in: 30, price: 250, checkoutUrl: "https://buy.stripe.com/fZu28j8ge4myct18Tyfbq0b" },
+        ],
+      },
+      {
+        name: "Loose Wave",
+        description: "Loose wave bundles.",
+        img: "/images/gallery/photo-04.jpg",
+        lengths: [],
+        comingSoon: true,
+      },
+      {
+        name: "Body Wave",
+        description: "Body wave bundles.",
+        img: "/images/gallery/photo-09.jpg",
+        lengths: [],
+        comingSoon: true,
+      },
     ],
   },
   {
@@ -89,11 +112,11 @@ const collections: Product[] = [
         img: "/images/gallery/photo-17.jpg",
         gallery: ["/images/gallery/photo-17.jpg", "/images/gallery/photo-05.jpg"],
         lengths: [
-          { in: 14, checkoutUrl: "https://buy.stripe.com/aFa28j3ZY1am8cLc5Kfbq0c" },
-          { in: 18, checkoutUrl: "https://buy.stripe.com/7sY5kv2VU6uGdx50n2fbq0e" },
-          { in: 20, checkoutUrl: "https://buy.stripe.com/8x23cnaom06i0Kjgm0fbq0f" },
-          { in: 22, checkoutUrl: "https://buy.stripe.com/eVq28j542aKWboX0n2fbq0g" },
-          // 24" pending — the Stripe URL you sent was cut off
+          { in: 14, price: 239.88, checkoutUrl: "https://buy.stripe.com/aFa28j3ZY1am8cLc5Kfbq0c" },
+          { in: 18, price: 299.99, checkoutUrl: "https://buy.stripe.com/7sY5kv2VU6uGdx50n2fbq0e" },
+          { in: 20, price: 349.99, checkoutUrl: "https://buy.stripe.com/8x23cnaom06i0Kjgm0fbq0f" },
+          { in: 22, price: 434.99, checkoutUrl: "https://buy.stripe.com/eVq28j542aKWboX0n2fbq0g" },
+          // 24" ($474.99) pending — need the full Stripe URL
         ],
       },
       {
@@ -103,11 +126,11 @@ const collections: Product[] = [
         img: "/images/gallery/photo-18.jpg",
         gallery: ["/images/gallery/photo-18.jpg", "/images/gallery/photo-19.jpg"],
         lengths: [
-          { in: 14, checkoutUrl: "https://buy.stripe.com/fZu6oz6863iu1On0n2fbq0k" },
-          { in: 18, checkoutUrl: "https://buy.stripe.com/cNicMX1RQf1cakT1r6fbq0l" },
-          { in: 20, checkoutUrl: "https://buy.stripe.com/9B600bdAy7yK8cL4Difbq0n" },
-          { in: 22, checkoutUrl: "https://buy.stripe.com/eVq28j3ZY8CO8cL8Tyfbq0p" },
-          { in: 24, checkoutUrl: "https://buy.stripe.com/4gMdR1dAy4my1On6Lqfbq0q" },
+          { in: 14, price: 199.99, checkoutUrl: "https://buy.stripe.com/fZu6oz6863iu1On0n2fbq0k" },
+          { in: 18, price: 239.99, checkoutUrl: "https://buy.stripe.com/cNicMX1RQf1cakT1r6fbq0l" },
+          { in: 20, price: 299.99, checkoutUrl: "https://buy.stripe.com/9B600bdAy7yK8cL4Difbq0n" },
+          { in: 22, price: 349.99, checkoutUrl: "https://buy.stripe.com/eVq28j3ZY8CO8cL8Tyfbq0p" },
+          { in: 24, price: 399.99, checkoutUrl: "https://buy.stripe.com/4gMdR1dAy4my1On6Lqfbq0q" },
         ],
       },
     ],
@@ -600,11 +623,15 @@ export default function CollectionsSection() {
                           .filter((l) => l.price != null)
                           .map((l) => l.price as number);
                         const vFrom = vPriced.length ? Math.min(...vPriced) : null;
+                        const soon = v.comingSoon;
                         return (
                           <button
                             key={v.name}
-                            onClick={() => chooseVariant(idx)}
-                            className="group text-left overflow-hidden transition-all duration-200 hover:scale-[1.02]"
+                            onClick={soon ? undefined : () => chooseVariant(idx)}
+                            disabled={soon}
+                            className={`group text-left overflow-hidden transition-all duration-200 ${
+                              soon ? "cursor-not-allowed" : "hover:scale-[1.02]"
+                            }`}
                             style={{
                               background: "oklch(0.12 0.005 285)",
                               border: "1px solid oklch(0.68 0.09 22 / 30%)",
@@ -617,8 +644,21 @@ export default function CollectionsSection() {
                               <img
                                 src={v.img}
                                 alt={v.name}
-                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                className={`w-full h-full object-cover transition-transform duration-500 ${
+                                  soon ? "opacity-40" : "group-hover:scale-110"
+                                }`}
                               />
+                              {soon && (
+                                <div
+                                  className="absolute inset-0 flex items-center justify-center font-['Josefin_Sans'] text-[0.6rem] tracking-[0.25em] uppercase"
+                                  style={{
+                                    background: "oklch(0.06 0.004 285 / 0.55)",
+                                    color: "oklch(0.85 0.07 22)",
+                                  }}
+                                >
+                                  Coming Soon
+                                </div>
+                              )}
                             </div>
                             <div className="p-3">
                               <span
@@ -631,7 +671,11 @@ export default function CollectionsSection() {
                                 className="font-['Cormorant_Garamond'] text-sm"
                                 style={{ color: "oklch(0.68 0.09 22)" }}
                               >
-                                {vFrom != null ? `from $${vFrom}` : `${v.lengths.length} lengths`}
+                                {soon
+                                  ? "Coming soon"
+                                  : vFrom != null
+                                  ? `from $${vFrom}`
+                                  : `${v.lengths.length} lengths`}
                               </span>
                             </div>
                           </button>
