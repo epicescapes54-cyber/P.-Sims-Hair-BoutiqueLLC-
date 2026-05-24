@@ -9,6 +9,16 @@ import { toast } from "sonner";
 
 const PRODUCTS_IMG = "/images/gallery/photo-03.jpg";
 
+type Length = { in: number; price?: number; checkoutUrl?: string };
+
+type Variant = {
+  name: string;
+  description?: string;
+  img: string;
+  gallery?: string[];
+  lengths: Length[];
+};
+
 type Product = {
   id: number;
   name: string;
@@ -19,9 +29,19 @@ type Product = {
   badge: string | null;
   img: string;
   gallery?: string[];
-  lengths?: { in: number; price: number; checkoutUrl?: string }[];
+  lengths?: Length[];
+  variants?: Variant[];
   comingSoon?: boolean;
 };
+
+// Lowest known price across a product's lengths (or all its variants' lengths).
+function fromPriceOf(product: Product): number | null {
+  const lens = product.variants
+    ? product.variants.flatMap((v) => v.lengths)
+    : product.lengths ?? [];
+  const priced = lens.filter((l) => l.price != null).map((l) => l.price as number);
+  return priced.length ? Math.min(...priced) : null;
+}
 
 const collections: Product[] = [
   {
@@ -54,27 +74,42 @@ const collections: Product[] = [
   },
   {
     id: 2,
-    name: "Body Wave Lace Front",
+    name: "HD Lace Wigs",
     category: "Wigs",
-    price: "$349",
+    price: "$—",
     originalPrice: null,
-    description: "Pre-plucked HD lace front wig with natural hairline. 180% density.",
+    description: "Choose your construction — 13×4 HD lace frontal or 5×5 HD closure.",
     badge: "New Arrival",
     img: "/images/gallery/photo-05.jpg",
-    gallery: [
-      "/images/gallery/photo-05.jpg",
-      "/images/gallery/photo-17.jpg",
-      "/images/gallery/photo-18.jpg",
-      "/images/gallery/photo-19.jpg",
-    ],
-    lengths: [
-      { in: 12, price: 349 },
-      { in: 14, price: 379 },
-      { in: 16, price: 409 },
-      { in: 18, price: 449 },
-      { in: 20, price: 489 },
-      { in: 22, price: 529 },
-      { in: 24, price: 579 },
+    variants: [
+      {
+        name: "13×4 HD Lace Frontal Wig",
+        description:
+          "Pre-plucked 13×4 HD lace frontal wig with a natural, melt-into-skin hairline.",
+        img: "/images/gallery/photo-17.jpg",
+        gallery: ["/images/gallery/photo-17.jpg", "/images/gallery/photo-05.jpg"],
+        lengths: [
+          { in: 14, checkoutUrl: "https://buy.stripe.com/aFa28j3ZY1am8cLc5Kfbq0c" },
+          { in: 18, checkoutUrl: "https://buy.stripe.com/7sY5kv2VU6uGdx50n2fbq0e" },
+          { in: 20, checkoutUrl: "https://buy.stripe.com/8x23cnaom06i0Kjgm0fbq0f" },
+          { in: 22, checkoutUrl: "https://buy.stripe.com/eVq28j542aKWboX0n2fbq0g" },
+          // 24" pending — the Stripe URL you sent was cut off
+        ],
+      },
+      {
+        name: "5×5 HD Closure Wig",
+        description:
+          "5×5 HD lace closure wig. Glueless, beginner-friendly, and natural-looking.",
+        img: "/images/gallery/photo-18.jpg",
+        gallery: ["/images/gallery/photo-18.jpg", "/images/gallery/photo-19.jpg"],
+        lengths: [
+          { in: 14, checkoutUrl: "https://buy.stripe.com/fZu6oz6863iu1On0n2fbq0k" },
+          { in: 18, checkoutUrl: "https://buy.stripe.com/cNicMX1RQf1cakT1r6fbq0l" },
+          { in: 20, checkoutUrl: "https://buy.stripe.com/9B600bdAy7yK8cL4Difbq0n" },
+          { in: 22, checkoutUrl: "https://buy.stripe.com/eVq28j3ZY8CO8cL8Tyfbq0p" },
+          { in: 24, checkoutUrl: "https://buy.stripe.com/4gMdR1dAy4my1On6Lqfbq0q" },
+        ],
+      },
     ],
   },
   {
@@ -172,28 +207,41 @@ export default function CollectionsSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
 
   const [shopProduct, setShopProduct] = useState<Product | null>(null);
+  const [variantIndex, setVariantIndex] = useState<number | null>(null);
   const [imgIndex, setImgIndex] = useState(0);
   const [lengthIndex, setLengthIndex] = useState(0);
 
   const openShop = (product: Product) => {
     setShopProduct(product);
+    setVariantIndex(null);
     setImgIndex(0);
     setLengthIndex(0);
   };
   const closeShop = () => setShopProduct(null);
+  const chooseVariant = (idx: number) => {
+    setVariantIndex(idx);
+    setImgIndex(0);
+    setLengthIndex(0);
+  };
+  const backToVariants = () => setVariantIndex(null);
 
   useEffect(() => {
     if (!shopProduct) return;
-    const photos = shopProduct.gallery?.length ? shopProduct.gallery : [shopProduct.img];
+    const inPicker = !!shopProduct.variants?.length && variantIndex === null;
+    const detail = shopProduct.variants?.length
+      ? shopProduct.variants[variantIndex ?? 0]
+      : shopProduct;
+    const photos = detail.gallery?.length ? detail.gallery : [detail.img];
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") closeShop();
-      else if (e.key === "ArrowRight") setImgIndex((i) => (i + 1) % photos.length);
-      else if (e.key === "ArrowLeft")
+      else if (!inPicker && e.key === "ArrowRight")
+        setImgIndex((i) => (i + 1) % photos.length);
+      else if (!inPicker && e.key === "ArrowLeft")
         setImgIndex((i) => (i - 1 + photos.length) % photos.length);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [shopProduct]);
+  }, [shopProduct, variantIndex]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -397,7 +445,7 @@ export default function CollectionsSection() {
                 </p>
                 <div className="flex items-center justify-between">
                   <div className="flex items-baseline gap-2">
-                    {product.lengths?.length ? (
+                    {fromPriceOf(product) != null ? (
                       <>
                         <span
                           className="font-['Cormorant_Garamond'] text-xs italic"
@@ -409,9 +457,16 @@ export default function CollectionsSection() {
                           className="font-['Playfair_Display'] text-xl font-bold"
                           style={{ color: "oklch(0.80 0.07 22)" }}
                         >
-                          ${Math.min(...product.lengths.map((l) => l.price))}
+                          ${fromPriceOf(product)}
                         </span>
                       </>
+                    ) : product.variants ? (
+                      <span
+                        className="font-['Cormorant_Garamond'] text-base italic"
+                        style={{ color: "oklch(0.70 0.04 60)" }}
+                      >
+                        {product.variants.length} styles
+                      </span>
                     ) : (
                       <span
                         className="font-['Playfair_Display'] text-xl font-bold"
@@ -481,13 +536,16 @@ export default function CollectionsSection() {
         </div>
       </div>
 
-      {/* Shop Now — product detail */}
+      {/* Shop Now — style picker + product detail */}
       {shopProduct &&
         (() => {
-          const photos = shopProduct.gallery?.length
-            ? shopProduct.gallery
-            : [shopProduct.img];
-          const lens = shopProduct.lengths ?? [];
+          const isVariant = !!shopProduct.variants?.length;
+          const inPicker = isVariant && variantIndex === null;
+          const detail = isVariant
+            ? shopProduct.variants![variantIndex ?? 0]
+            : shopProduct;
+          const photos = detail.gallery?.length ? detail.gallery : [detail.img];
+          const lens = detail.lengths ?? [];
           const selected = lens[lengthIndex];
           return (
             <div
@@ -496,7 +554,7 @@ export default function CollectionsSection() {
               onClick={closeShop}
             >
               <div
-                className="relative w-full max-w-4xl my-auto grid grid-cols-1 md:grid-cols-2"
+                className="relative w-full max-w-4xl my-auto"
                 onClick={(e) => e.stopPropagation()}
                 style={{
                   background: "oklch(0.10 0.005 285)",
@@ -506,7 +564,7 @@ export default function CollectionsSection() {
                 <button
                   onClick={closeShop}
                   aria-label="Close"
-                  className="absolute top-3 right-3 z-10 p-2 transition-transform hover:scale-110"
+                  className="absolute top-3 right-3 z-20 p-2 transition-transform hover:scale-110"
                   style={{
                     background: "oklch(0.08 0.004 285 / 0.6)",
                     color: "oklch(0.85 0.07 22)",
@@ -515,189 +573,279 @@ export default function CollectionsSection() {
                   <X size={22} />
                 </button>
 
-                {/* Gallery */}
-                <div style={{ background: "oklch(0.06 0.004 285)" }}>
-                  <div
-                    className="relative overflow-hidden"
-                    style={{ aspectRatio: "4 / 5" }}
-                  >
-                    <img
-                      src={photos[imgIndex]}
-                      alt={shopProduct.name}
-                      className="w-full h-full object-cover"
-                    />
-                    {photos.length > 1 && (
-                      <>
-                        <button
-                          onClick={() =>
-                            setImgIndex((i) => (i - 1 + photos.length) % photos.length)
-                          }
-                          aria-label="Previous photo"
-                          className="absolute left-2 top-1/2 -translate-y-1/2 p-1.5 transition-transform hover:scale-110"
-                          style={{
-                            background: "oklch(0.08 0.004 285 / 0.6)",
-                            color: "oklch(0.85 0.07 22)",
-                          }}
-                        >
-                          <ChevronLeft size={22} />
-                        </button>
-                        <button
-                          onClick={() => setImgIndex((i) => (i + 1) % photos.length)}
-                          aria-label="Next photo"
-                          className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 transition-transform hover:scale-110"
-                          style={{
-                            background: "oklch(0.08 0.004 285 / 0.6)",
-                            color: "oklch(0.85 0.07 22)",
-                          }}
-                        >
-                          <ChevronRight size={22} />
-                        </button>
-                      </>
-                    )}
-                  </div>
-                  {photos.length > 1 && (
-                    <div className="flex gap-2 p-3 overflow-x-auto">
-                      {photos.map((p, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() => setImgIndex(idx)}
-                          aria-label={`Photo ${idx + 1}`}
-                          className="shrink-0 transition-opacity"
-                          style={{
-                            border:
-                              idx === imgIndex
-                                ? "2px solid oklch(0.80 0.07 22)"
-                                : "2px solid transparent",
-                            opacity: idx === imgIndex ? 1 : 0.6,
-                          }}
-                        >
-                          <img src={p} alt="" className="w-12 h-14 object-cover" />
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {/* Details */}
-                <div className="p-6 lg:p-8 flex flex-col">
-                  <span
-                    className="font-['Josefin_Sans'] text-[0.6rem] tracking-[0.25em] uppercase"
-                    style={{ color: "oklch(0.68 0.09 22)" }}
-                  >
-                    {shopProduct.category}
-                  </span>
-                  <h3
-                    className="font-['Playfair_Display'] text-2xl lg:text-3xl font-bold mt-1 mb-3"
-                    style={{ color: "oklch(0.95 0.02 60)" }}
-                  >
-                    {shopProduct.name}
-                  </h3>
-
-                  <div className="flex items-baseline gap-3 mb-4">
+                {inPicker ? (
+                  /* STEP 1 — choose a style */
+                  <div className="p-6 lg:p-10">
                     <span
-                      className="font-['Playfair_Display'] text-2xl font-bold"
-                      style={{ color: "oklch(0.80 0.07 22)" }}
+                      className="font-['Josefin_Sans'] text-[0.6rem] tracking-[0.25em] uppercase"
+                      style={{ color: "oklch(0.68 0.09 22)" }}
                     >
-                      {selected ? `$${selected.price}` : shopProduct.price}
+                      {shopProduct.category}
                     </span>
-                    {shopProduct.originalPrice && (
-                      <span
-                        className="font-['Cormorant_Garamond'] text-base line-through"
-                        style={{ color: "oklch(0.50 0.02 60)" }}
-                      >
-                        {shopProduct.originalPrice}
-                      </span>
-                    )}
-                  </div>
-
-                  <p
-                    className="font-['Cormorant_Garamond'] text-base leading-relaxed mb-6"
-                    style={{ color: "oklch(0.65 0.02 60)" }}
-                  >
-                    {shopProduct.description}
-                  </p>
-
-                  {lens.length > 0 && (
-                    <div className="mb-6">
-                      <div className="flex items-center justify-between mb-2">
-                        <span
-                          className="font-['Josefin_Sans'] text-[0.6rem] tracking-[0.2em] uppercase"
-                          style={{ color: "oklch(0.80 0.07 22)" }}
-                        >
-                          Length
-                        </span>
-                        {selected && (
-                          <span
-                            className="font-['Cormorant_Garamond'] text-sm"
-                            style={{ color: "oklch(0.60 0.02 60)" }}
+                    <h3
+                      className="font-['Playfair_Display'] text-2xl lg:text-3xl font-bold mt-1 mb-2"
+                      style={{ color: "oklch(0.95 0.02 60)" }}
+                    >
+                      {shopProduct.name}
+                    </h3>
+                    <p
+                      className="font-['Cormorant_Garamond'] text-base leading-relaxed mb-6"
+                      style={{ color: "oklch(0.65 0.02 60)" }}
+                    >
+                      {shopProduct.description}
+                    </p>
+                    <div className="grid grid-cols-2 gap-4">
+                      {shopProduct.variants!.map((v, idx) => {
+                        const vPriced = v.lengths
+                          .filter((l) => l.price != null)
+                          .map((l) => l.price as number);
+                        const vFrom = vPriced.length ? Math.min(...vPriced) : null;
+                        return (
+                          <button
+                            key={v.name}
+                            onClick={() => chooseVariant(idx)}
+                            className="group text-left overflow-hidden transition-all duration-200 hover:scale-[1.02]"
+                            style={{
+                              background: "oklch(0.12 0.005 285)",
+                              border: "1px solid oklch(0.68 0.09 22 / 30%)",
+                            }}
                           >
-                            {selected.in}" selected
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        {lens.map((l, idx) => {
-                          const active = idx === lengthIndex;
-                          return (
+                            <div
+                              className="relative overflow-hidden"
+                              style={{ aspectRatio: "4 / 5" }}
+                            >
+                              <img
+                                src={v.img}
+                                alt={v.name}
+                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                              />
+                            </div>
+                            <div className="p-3">
+                              <span
+                                className="font-['Playfair_Display'] text-base font-semibold block"
+                                style={{ color: "oklch(0.93 0.02 60)" }}
+                              >
+                                {v.name}
+                              </span>
+                              <span
+                                className="font-['Cormorant_Garamond'] text-sm"
+                                style={{ color: "oklch(0.68 0.09 22)" }}
+                              >
+                                {vFrom != null ? `from $${vFrom}` : `${v.lengths.length} lengths`}
+                              </span>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ) : (
+                  /* STEP 2 — selected product detail */
+                  <div className="grid grid-cols-1 md:grid-cols-2">
+                    {isVariant && (
+                      <button
+                        onClick={backToVariants}
+                        className="absolute top-3 left-3 z-20 flex items-center gap-1 px-2.5 py-2 font-['Josefin_Sans'] text-[0.6rem] tracking-[0.15em] uppercase transition-transform hover:scale-105"
+                        style={{
+                          background: "oklch(0.08 0.004 285 / 0.6)",
+                          color: "oklch(0.85 0.07 22)",
+                        }}
+                      >
+                        <ChevronLeft size={16} /> Styles
+                      </button>
+                    )}
+
+                    {/* Gallery */}
+                    <div style={{ background: "oklch(0.06 0.004 285)" }}>
+                      <div
+                        className="relative overflow-hidden"
+                        style={{ aspectRatio: "4 / 5" }}
+                      >
+                        <img
+                          src={photos[imgIndex]}
+                          alt={detail.name}
+                          className="w-full h-full object-cover"
+                        />
+                        {photos.length > 1 && (
+                          <>
                             <button
-                              key={l.in}
-                              onClick={() => setLengthIndex(idx)}
-                              className="font-['Playfair_Display'] text-sm font-semibold px-3.5 py-2 transition-all duration-200"
+                              onClick={() =>
+                                setImgIndex((i) => (i - 1 + photos.length) % photos.length)
+                              }
+                              aria-label="Previous photo"
+                              className="absolute left-2 top-1/2 -translate-y-1/2 p-1.5 transition-transform hover:scale-110"
                               style={{
-                                border: active
-                                  ? "1px solid oklch(0.80 0.07 22)"
-                                  : "1px solid oklch(0.68 0.09 22 / 30%)",
-                                background: active
-                                  ? "oklch(0.68 0.09 22 / 15%)"
-                                  : "transparent",
-                                color: active
-                                  ? "oklch(0.90 0.05 22)"
-                                  : "oklch(0.75 0.03 60)",
+                                background: "oklch(0.08 0.004 285 / 0.6)",
+                                color: "oklch(0.85 0.07 22)",
                               }}
                             >
-                              {l.in}"
+                              <ChevronLeft size={22} />
                             </button>
-                          );
-                        })}
+                            <button
+                              onClick={() => setImgIndex((i) => (i + 1) % photos.length)}
+                              aria-label="Next photo"
+                              className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 transition-transform hover:scale-110"
+                              style={{
+                                background: "oklch(0.08 0.004 285 / 0.6)",
+                                color: "oklch(0.85 0.07 22)",
+                              }}
+                            >
+                              <ChevronRight size={22} />
+                            </button>
+                          </>
+                        )}
                       </div>
+                      {photos.length > 1 && (
+                        <div className="flex gap-2 p-3 overflow-x-auto">
+                          {photos.map((p, idx) => (
+                            <button
+                              key={idx}
+                              onClick={() => setImgIndex(idx)}
+                              aria-label={`Photo ${idx + 1}`}
+                              className="shrink-0 transition-opacity"
+                              style={{
+                                border:
+                                  idx === imgIndex
+                                    ? "2px solid oklch(0.80 0.07 22)"
+                                    : "2px solid transparent",
+                                opacity: idx === imgIndex ? 1 : 0.6,
+                              }}
+                            >
+                              <img src={p} alt="" className="w-12 h-14 object-cover" />
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                  )}
 
-                  <button
-                    onClick={() => {
-                      if (selected?.checkoutUrl) {
-                        // Stripe-hosted secure checkout for the selected length
-                        window.location.href = selected.checkoutUrl;
-                      } else {
-                        toast(
-                          selected
-                            ? `Added ${shopProduct.name} — ${selected.in}" — $${selected.price} to your bag`
-                            : `Added ${shopProduct.name} to your bag`
-                        );
-                      }
-                    }}
-                    className="w-full flex items-center justify-center gap-2 font-['Josefin_Sans'] text-xs tracking-[0.2em] uppercase py-3.5 mt-auto transition-all duration-200 hover:opacity-90"
-                    style={{
-                      background: "oklch(0.68 0.09 22)",
-                      color: "oklch(0.08 0.004 285)",
-                    }}
-                  >
-                    <ShoppingBag size={16} />
-                    {selected?.checkoutUrl ? "Buy Now" : "Add to Bag"}
-                    {selected ? ` · $${selected.price}` : ""}
-                  </button>
+                    {/* Details */}
+                    <div className="p-6 lg:p-8 flex flex-col">
+                      <span
+                        className="font-['Josefin_Sans'] text-[0.6rem] tracking-[0.25em] uppercase"
+                        style={{ color: "oklch(0.68 0.09 22)" }}
+                      >
+                        {shopProduct.category}
+                      </span>
+                      <h3
+                        className="font-['Playfair_Display'] text-2xl lg:text-3xl font-bold mt-1 mb-3"
+                        style={{ color: "oklch(0.95 0.02 60)" }}
+                      >
+                        {detail.name}
+                      </h3>
 
-                  <p
-                    className="font-['Cormorant_Garamond'] text-xs text-center mt-3 leading-relaxed"
-                    style={{ color: "oklch(0.55 0.02 60)" }}
-                  >
-                    Free U.S. shipping over $200. To complete your order, text{" "}
-                    <a href="tel:+17703835824" style={{ color: "oklch(0.80 0.07 22)" }}>
-                      (770) 383-5824
-                    </a>{" "}
-                    or DM us on Instagram.
-                  </p>
-                </div>
+                      {(selected?.price != null ||
+                        (!isVariant && shopProduct.originalPrice)) && (
+                        <div className="flex items-baseline gap-3 mb-4">
+                          {selected?.price != null && (
+                            <span
+                              className="font-['Playfair_Display'] text-2xl font-bold"
+                              style={{ color: "oklch(0.80 0.07 22)" }}
+                            >
+                              ${selected.price}
+                            </span>
+                          )}
+                          {!isVariant && shopProduct.originalPrice && (
+                            <span
+                              className="font-['Cormorant_Garamond'] text-base line-through"
+                              style={{ color: "oklch(0.50 0.02 60)" }}
+                            >
+                              {shopProduct.originalPrice}
+                            </span>
+                          )}
+                        </div>
+                      )}
+
+                      <p
+                        className="font-['Cormorant_Garamond'] text-base leading-relaxed mb-6"
+                        style={{ color: "oklch(0.65 0.02 60)" }}
+                      >
+                        {detail.description ?? shopProduct.description}
+                      </p>
+
+                      {lens.length > 0 && (
+                        <div className="mb-6">
+                          <div className="flex items-center justify-between mb-2">
+                            <span
+                              className="font-['Josefin_Sans'] text-[0.6rem] tracking-[0.2em] uppercase"
+                              style={{ color: "oklch(0.80 0.07 22)" }}
+                            >
+                              Length
+                            </span>
+                            {selected && (
+                              <span
+                                className="font-['Cormorant_Garamond'] text-sm"
+                                style={{ color: "oklch(0.60 0.02 60)" }}
+                              >
+                                {selected.in}" selected
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            {lens.map((l, idx) => {
+                              const active = idx === lengthIndex;
+                              return (
+                                <button
+                                  key={l.in}
+                                  onClick={() => setLengthIndex(idx)}
+                                  className="font-['Playfair_Display'] text-sm font-semibold px-3.5 py-2 transition-all duration-200"
+                                  style={{
+                                    border: active
+                                      ? "1px solid oklch(0.80 0.07 22)"
+                                      : "1px solid oklch(0.68 0.09 22 / 30%)",
+                                    background: active
+                                      ? "oklch(0.68 0.09 22 / 15%)"
+                                      : "transparent",
+                                    color: active
+                                      ? "oklch(0.90 0.05 22)"
+                                      : "oklch(0.75 0.03 60)",
+                                  }}
+                                >
+                                  {l.in}"
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+
+                      <button
+                        onClick={() => {
+                          if (selected?.checkoutUrl) {
+                            window.location.href = selected.checkoutUrl;
+                          } else {
+                            toast(
+                              selected
+                                ? `Added ${detail.name} — ${selected.in}"${
+                                    selected.price != null ? ` — $${selected.price}` : ""
+                                  } to your bag`
+                                : `Added ${detail.name} to your bag`
+                            );
+                          }
+                        }}
+                        className="w-full flex items-center justify-center gap-2 font-['Josefin_Sans'] text-xs tracking-[0.2em] uppercase py-3.5 mt-auto transition-all duration-200 hover:opacity-90"
+                        style={{
+                          background: "oklch(0.68 0.09 22)",
+                          color: "oklch(0.08 0.004 285)",
+                        }}
+                      >
+                        <ShoppingBag size={16} />
+                        {selected?.checkoutUrl ? "Buy Now" : "Add to Bag"}
+                        {selected?.price != null ? ` · $${selected.price}` : ""}
+                      </button>
+
+                      <p
+                        className="font-['Cormorant_Garamond'] text-xs text-center mt-3 leading-relaxed"
+                        style={{ color: "oklch(0.55 0.02 60)" }}
+                      >
+                        Free U.S. shipping over $200. To complete your order, text{" "}
+                        <a href="tel:+17703835824" style={{ color: "oklch(0.80 0.07 22)" }}>
+                          (770) 383-5824
+                        </a>{" "}
+                        or DM us on Instagram.
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           );
