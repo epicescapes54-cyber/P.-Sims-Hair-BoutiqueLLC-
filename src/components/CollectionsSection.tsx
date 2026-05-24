@@ -136,7 +136,7 @@ const collections: Product[] = [
           { in: 18, price: 299.99, checkoutUrl: "https://buy.stripe.com/7sY5kv2VU6uGdx50n2fbq0e" },
           { in: 20, price: 349.99, checkoutUrl: "https://buy.stripe.com/8x23cnaom06i0Kjgm0fbq0f" },
           { in: 22, price: 434.99, checkoutUrl: "https://buy.stripe.com/eVq28j542aKWboX0n2fbq0g" },
-          // 24" ($474.99) pending — need the full Stripe URL
+          { in: 24, price: 474.99, checkoutUrl: "https://buy.stripe.com/eVq4grcwu4myboX3zefbq0O" },
         ],
       },
       {
