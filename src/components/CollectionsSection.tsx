@@ -157,40 +157,43 @@ const collections: Product[] = [
   },
   {
     id: 3,
-    name: "Deep Wave Closure",
+    name: "HD Lace Closures",
     category: "Closures",
-    price: "$129",
-    originalPrice: "$160",
-    description: "5x5 HD lace closure with deep wave pattern. Bleached knots.",
+    price: "$—",
+    originalPrice: null,
+    description: "Choose your closure — HD lace frontal closure or HD lace closure.",
     badge: null,
     img: "/images/gallery/photo-06.jpg",
-    gallery: [
-      "/images/gallery/photo-06.jpg",
-      "/images/gallery/photo-20.jpg",
-      "/images/gallery/photo-21.jpg",
-      "/images/gallery/photo-22.jpg",
+    variants: [
+      {
+        name: "HD Lace Frontal Closure",
+        description: "HD lace frontal closure with a natural, pre-plucked hairline.",
+        img: "/images/gallery/photo-06.jpg",
+        gallery: ["/images/gallery/photo-06.jpg", "/images/gallery/photo-20.jpg"],
+        lengths: [
+          { in: 14, price: 225, checkoutUrl: "https://buy.stripe.com/3cI3cneECaKW78H7Pufbq0P" },
+          { in: 16, price: 245, checkoutUrl: "https://buy.stripe.com/fZuaEPbsq06i3Wv7Pufbq0Q" },
+          { in: 18, price: 265, checkoutUrl: "https://buy.stripe.com/14A00b2VUcT450z3zefbq0R" },
+          { in: 20, price: 285, checkoutUrl: "https://buy.stripe.com/5kQ8wHfIG1am3Wv8Tyfbq0S" },
+        ],
+      },
+      {
+        name: "HD Lace Closure",
+        description: "5×5 HD lace closure. Glueless and beginner-friendly.",
+        img: "/images/gallery/photo-21.jpg",
+        gallery: ["/images/gallery/photo-21.jpg", "/images/gallery/photo-22.jpg"],
+        lengths: [
+          { in: 14, price: 175, checkoutUrl: "https://buy.stripe.com/eVq8wH5428CO50zc5Kfbq0T" },
+          { in: 16, price: 185, checkoutUrl: "https://buy.stripe.com/7sYeV55426uG78H8Tyfbq0U" },
+          { in: 18, price: 195, checkoutUrl: "https://buy.stripe.com/3cIeV50NM5qCfFd0n2fbq0X" },
+          { in: 20, price: 205, checkoutUrl: "https://buy.stripe.com/3cIdR11RQ1amakT7Pufbq0Y" },
+        ],
+      },
     ],
-    lengths: [
-      { in: 12, price: 129 },
-      { in: 14, price: 149 },
-      { in: 16, price: 169 },
-      { in: 18, price: 199 },
-    ],
-  },
-  {
-    id: 4,
-    name: "Luxury Repair Serum",
-    category: "Hair Care",
-    price: "$68",
-    originalPrice: null,
-    description: "Argan oil & keratin infused serum for ultimate shine and repair.",
-    badge: "Limited",
-    img: "/images/gallery/photo-07.jpg",
-    comingSoon: true,
   },
   {
     id: 5,
-    name: "Kinky Curly Bundle",
+    name: "Deep Wave-Kinky Curly Bundle",
     category: "Hair Extensions",
     price: "$199",
     originalPrice: null,
@@ -212,6 +215,17 @@ const collections: Product[] = [
       { in: 22, price: 329 },
       { in: 24, price: 359 },
     ],
+  },
+  {
+    id: 4,
+    name: "Luxury Repair Serum",
+    category: "Hair Care",
+    price: "$68",
+    originalPrice: null,
+    description: "Argan oil & keratin infused serum for ultimate shine and repair.",
+    badge: "Limited",
+    img: "/images/gallery/photo-07.jpg",
+    comingSoon: true,
   },
   {
     id: 6,
@@ -568,13 +582,15 @@ export default function CollectionsSection() {
           ))}
         </div>
 
-        {/* View All CTA */}
+        {/* View Gallery CTA */}
         <div className="flex justify-center mt-14 reveal">
           <button
             className="btn-outline-gold"
-            onClick={() => toast("Full catalog coming soon!")}
+            onClick={() =>
+              document.querySelector("#gallery")?.scrollIntoView({ behavior: "smooth" })
+            }
           >
-            View Full Collection
+            View Gallery
           </button>
         </div>
       </div>
