@@ -5,7 +5,8 @@
 
 import { useState, useEffect } from "react";
 import { Menu, X, ShoppingBag, Phone } from "lucide-react";
-import { toast } from "sonner";
+import { useCart } from "@/contexts/CartContext";
+import CartDrawer from "@/components/CartDrawer";
 
 const navLinks = [
   { label: "Home", href: "#home" },
@@ -19,6 +20,7 @@ const navLinks = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const { count, openCart } = useCart();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 60);
@@ -85,20 +87,55 @@ export default function Navbar() {
                 Book Now
               </a>
               <button
-                onClick={() => toast("Shopping cart coming soon!")}
+                onClick={openCart}
+                aria-label={`Open cart${count > 0 ? `, ${count} item${count === 1 ? "" : "s"}` : ""}`}
                 className="relative p-2 text-[oklch(0.68_0.09_22)] hover:text-[oklch(0.80_0.07_22)] transition-colors"
               >
                 <ShoppingBag size={18} />
+                {count > 0 && (
+                  <span
+                    className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center font-['Josefin_Sans'] text-[0.6rem] font-semibold rounded-full"
+                    style={{
+                      background: "oklch(0.80 0.07 22)",
+                      color: "oklch(0.08 0.004 285)",
+                      border: "1.5px solid oklch(0.08 0.004 285)",
+                    }}
+                  >
+                    {count > 99 ? "99+" : count}
+                  </span>
+                )}
               </button>
             </div>
 
-            {/* Mobile Menu Toggle */}
-            <button
-              className="md:hidden text-[oklch(0.80_0.07_22)] p-2"
-              onClick={() => setMenuOpen(!menuOpen)}
-            >
-              {menuOpen ? <X size={22} /> : <Menu size={22} />}
-            </button>
+            {/* Mobile right-side actions */}
+            <div className="md:hidden flex items-center gap-1">
+              <button
+                onClick={openCart}
+                aria-label={`Open cart${count > 0 ? `, ${count} item${count === 1 ? "" : "s"}` : ""}`}
+                className="relative p-2 text-[oklch(0.68_0.09_22)] hover:text-[oklch(0.80_0.07_22)] transition-colors"
+              >
+                <ShoppingBag size={20} />
+                {count > 0 && (
+                  <span
+                    className="absolute top-0 right-0 min-w-[18px] h-[18px] px-1 flex items-center justify-center font-['Josefin_Sans'] text-[0.6rem] font-semibold rounded-full"
+                    style={{
+                      background: "oklch(0.80 0.07 22)",
+                      color: "oklch(0.08 0.004 285)",
+                      border: "1.5px solid oklch(0.08 0.004 285)",
+                    }}
+                  >
+                    {count > 99 ? "99+" : count}
+                  </span>
+                )}
+              </button>
+              <button
+                className="text-[oklch(0.80_0.07_22)] p-2"
+                onClick={() => setMenuOpen(!menuOpen)}
+                aria-label={menuOpen ? "Close menu" : "Open menu"}
+              >
+                {menuOpen ? <X size={22} /> : <Menu size={22} />}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -157,6 +194,9 @@ export default function Navbar() {
           </a>
         </div>
       </div>
+
+      {/* Cart drawer (renders globally; controlled by CartContext) */}
+      <CartDrawer />
     </>
   );
 }

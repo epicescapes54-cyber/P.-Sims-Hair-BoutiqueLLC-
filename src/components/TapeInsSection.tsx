@@ -7,6 +7,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Truck, Info, Sparkles, ShieldCheck, ShoppingBag, X } from "lucide-react";
 import { toast } from "sonner";
+import { useCart, cartKey } from "@/contexts/CartContext";
 
 const TAPE_IMG = "/images/gallery/photo-12.jpg";
 
@@ -37,6 +38,7 @@ function deliveryWindow(orderDate: Date) {
 
 export default function TapeInsSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const { addItem, openCart } = useCart();
   const [texture, setTexture] = useState<string>("Straight");
   const [length, setLength] = useState<number>(20);
   const [openPanel, setOpenPanel] = useState<"details" | "care" | null>("details");
@@ -382,9 +384,24 @@ export default function TapeInsSection() {
             <div className="reveal flex flex-wrap gap-3">
               <button
                 className="btn-rose-gold flex items-center gap-2"
-                onClick={() =>
-                  toast.success(`Added ${texture} ${length}" Tape-Ins to cart — $${price}`)
-                }
+                onClick={() => {
+                  if (!price) {
+                    toast(
+                      `${length}" pricing isn't live yet — text (770) 383-5824 for a quote.`
+                    );
+                    return;
+                  }
+                  const name = "Tape-In Extensions";
+                  addItem({
+                    key: cartKey(name, texture, length),
+                    name,
+                    variant: texture,
+                    length,
+                    price,
+                    image: TAPE_IMG,
+                  });
+                  openCart();
+                }}
               >
                 <ShoppingBag size={14} />
                 Add to Cart

@@ -6,6 +6,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ShoppingBag, Sparkles, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { toast } from "sonner";
+import { useCart, cartKey } from "@/contexts/CartContext";
 
 const PRODUCTS_IMG = "/images/gallery/photo-03.jpg";
 
@@ -271,6 +272,7 @@ const badgeColors: Record<string, string> = {
 
 export default function CollectionsSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const { addItem, openCart } = useCart();
 
   const [shopProduct, setShopProduct] = useState<Product | null>(null);
   const [variantIndex, setVariantIndex] = useState<number | null>(null);
@@ -899,17 +901,38 @@ export default function CollectionsSection() {
 
                       <button
                         onClick={() => {
-                          if (selected?.checkoutUrl) {
-                            window.location.href = selected.checkoutUrl;
-                          } else {
+                          // Length-based products require a length pick with a price.
+                          if (lens.length > 0 && (!selected || selected.price == null)) {
                             toast(
-                              selected
-                                ? `Added ${detail.name} — ${selected.in}"${
-                                    selected.price != null ? ` — $${selected.price}` : ""
-                                  } to your bag`
-                                : `Added ${detail.name} to your bag`
+                              "This length isn't priced yet — text (770) 383-5824 and we'll get you a quote."
                             );
+                            return;
                           }
+                          // For length-less products, fall back to the product's
+                          // display price (e.g. "$68") if a numeric price exists.
+                          const fallbackPrice =
+                            selected?.price ??
+                            (() => {
+                              const n = Number(String(shopProduct.price).replace(/[^\d.]/g, ""));
+                              return Number.isFinite(n) && n > 0 ? n : null;
+                            })();
+                          if (fallbackPrice == null) {
+                            toast(
+                              "This item isn't priced yet — text (770) 383-5824 to order."
+                            );
+                            return;
+                          }
+                          const variantName = isVariant ? detail.name : undefined;
+                          addItem({
+                            key: cartKey(shopProduct.name, variantName, selected?.in),
+                            name: shopProduct.name,
+                            variant: variantName,
+                            length: selected?.in,
+                            price: fallbackPrice,
+                            image: detail.img,
+                            checkoutUrl: selected?.checkoutUrl,
+                          });
+                          openCart();
                         }}
                         className="w-full flex items-center justify-center gap-2 font-['Josefin_Sans'] text-xs tracking-[0.2em] uppercase py-3.5 mt-auto transition-all duration-200 hover:opacity-90"
                         style={{
@@ -918,7 +941,7 @@ export default function CollectionsSection() {
                         }}
                       >
                         <ShoppingBag size={16} />
-                        {selected?.checkoutUrl ? "Buy Now" : "Add to Bag"}
+                        Add to Cart
                         {selected?.price != null ? ` · $${selected.price}` : ""}
                       </button>
 
