@@ -8,27 +8,54 @@
    Session from `items` (see [[cart-checkout-decision]] in memory).
    ============================================================================= */
 
-import { X, Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
+import { useState } from "react";
+import { X, Minus, Plus, Trash2, ShoppingBag, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useCart } from "@/contexts/CartContext";
+import { supabase } from "@/lib/supabase";
 
 export default function CartDrawer() {
   const { items, count, subtotal, isOpen, closeCart, updateQty, removeItem } =
     useCart();
+  const [checkingOut, setCheckingOut] = useState(false);
 
-  const handleCheckout = () => {
-    if (items.length === 0) return;
-    // TODO: POST cart items to Supabase Edge Function `create-checkout`, then
-    // window.location.href = data.url. Until that's deployed, fall back to the
-    // existing per-item Stripe Payment Link if there's only one item, otherwise
-    // tell the customer how to complete a multi-item order.
-    if (items.length === 1 && items[0].checkoutUrl) {
-      window.location.href = items[0].checkoutUrl;
-      return;
+  const handleCheckout = async () => {
+    if (items.length === 0 || checkingOut) return;
+    setCheckingOut(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("create-checkout", {
+        body: {
+          items: items.map((it) => ({
+            name: it.name,
+            variant: it.variant,
+            length: it.length,
+            checkoutUrl: it.checkoutUrl,
+            price: it.price,
+            qty: it.qty,
+            image: it.image,
+          })),
+        },
+      });
+      if (error) throw error;
+      if (data?.url) {
+        window.location.href = data.url as string;
+        return;
+      }
+      throw new Error("No checkout URL returned");
+    } catch (err) {
+      // Graceful fallback: single-item carts can still use the per-SKU Stripe
+      // Payment Link; multi-item carts get a contact prompt.
+      console.error("Checkout failed:", err);
+      if (items.length === 1 && items[0].checkoutUrl) {
+        window.location.href = items[0].checkoutUrl;
+        return;
+      }
+      toast(
+        "We couldn't reach checkout just now. Text (770) 383-5824 or DM us on Instagram and we'll send a single invoice for all items."
+      );
+    } finally {
+      setCheckingOut(false);
     }
-    toast(
-      "Multi-item checkout is being set up. To complete your order now, text (770) 383-5824 or DM us on Instagram — we'll send a single invoice for all items."
-    );
   };
 
   return (
@@ -242,13 +269,21 @@ export default function CartDrawer() {
             </p>
             <button
               onClick={handleCheckout}
-              className="w-full flex items-center justify-center gap-2 font-['Josefin_Sans'] text-xs tracking-[0.25em] uppercase py-3.5 transition-all hover:opacity-90"
+              disabled={checkingOut}
+              className="w-full flex items-center justify-center gap-2 font-['Josefin_Sans'] text-xs tracking-[0.25em] uppercase py-3.5 transition-all hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
               style={{
                 background: "oklch(0.68 0.09 22)",
                 color: "oklch(0.08 0.004 285)",
               }}
             >
-              Checkout · ${subtotal.toFixed(2)}
+              {checkingOut ? (
+                <>
+                  <Loader2 size={14} className="animate-spin" />
+                  Preparing checkout…
+                </>
+              ) : (
+                <>Checkout · ${subtotal.toFixed(2)}</>
+              )}
             </button>
             <button
               onClick={closeCart}
