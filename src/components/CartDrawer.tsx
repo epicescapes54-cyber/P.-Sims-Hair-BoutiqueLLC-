@@ -29,6 +29,7 @@ export default function CartDrawer() {
             name: it.name,
             variant: it.variant,
             length: it.length,
+            color: it.color,
             checkoutUrl: it.checkoutUrl,
             price: it.price,
             qty: it.qty,
@@ -180,12 +181,12 @@ export default function CartDrawer() {
                     >
                       {it.name}
                     </p>
-                    {(it.variant || it.length) && (
+                    {(it.variant || it.length || it.color) && (
                       <p
                         className="font-['Cormorant_Garamond'] text-xs italic mt-0.5"
                         style={{ color: "oklch(0.65 0.02 60)" }}
                       >
-                        {[it.variant, it.length ? `${it.length}"` : null]
+                        {[it.variant, it.length ? `${it.length}"` : null, it.color]
                           .filter(Boolean)
                           .join(" · ")}
                       </p>

@@ -41,6 +41,8 @@ type CartLine = {
   name: string;
   variant?: string;
   length?: number;
+  /** Optional color choice (e.g. "Gold" for the PSHB bonnet). */
+  color?: string;
   /** Per-SKU buy.stripe.com Payment Link, when one exists. */
   checkoutUrl?: string;
   /** Unit price in USD (fallback only — used when no checkoutUrl). */
@@ -130,7 +132,11 @@ Deno.serve(async (req: Request) => {
   const fallbackItems: string[] = []; // for logging
   for (const it of items) {
     const qty = Math.max(1, Math.floor(it.qty || 1));
-    if (it.checkoutUrl) {
+    // Items with a color choice ALWAYS use inline price_data so the chosen
+    // color shows up in the customer's order summary (Price-ID line items
+    // don't carry per-cart descriptions). Items without color resolve to the
+    // catalog Price ID where possible — cleaner long-term.
+    if (it.checkoutUrl && !it.color) {
       const resolved = await resolveLink(it.checkoutUrl).catch(() => null);
       if (resolved?.priceId) {
         line_items.push({ price: resolved.priceId, quantity: qty });
@@ -141,7 +147,9 @@ Deno.serve(async (req: Request) => {
     if (typeof it.price !== "number" || it.price <= 0) {
       return json(400, { error: `Item "${it.name}" has no price` });
     }
-    const desc = [it.variant, it.length ? `${it.length}"` : null].filter(Boolean).join(" · ");
+    const desc = [it.variant, it.length ? `${it.length}"` : null, it.color]
+      .filter(Boolean)
+      .join(" · ");
     line_items.push({
       price_data: {
         currency: "usd",
@@ -156,6 +164,16 @@ Deno.serve(async (req: Request) => {
     });
     fallbackItems.push(`${it.name}${desc ? ` (${desc})` : ""}`);
   }
+
+  // Aggregate any color selections into session.metadata so the shopkeeper
+  // can pull them right from the Stripe order page at a glance.
+  const sessionMetadata: Record<string, string> = {};
+  items.forEach((it, i) => {
+    if (it.color) {
+      const label = it.variant ? `${it.variant} (${it.name})` : it.name;
+      sessionMetadata[`item_${i + 1}_color`] = `${label}: ${it.color} × ${it.qty}`;
+    }
+  });
 
   if (fallbackItems.length) {
     console.log("create-checkout fallback (inline price_data):", fallbackItems);
@@ -177,6 +195,7 @@ Deno.serve(async (req: Request) => {
       phone_number_collection: { enabled: true },
       allow_promotion_codes: true,
       automatic_tax: { enabled: false }, // flip to true once Stripe Tax is set up
+      ...(Object.keys(sessionMetadata).length > 0 ? { metadata: sessionMetadata } : {}),
     });
     return json(200, { url: session.url, id: session.id });
   } catch (err) {

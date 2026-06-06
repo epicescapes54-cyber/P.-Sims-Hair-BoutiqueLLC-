@@ -18,6 +18,8 @@ type Variant = {
   img: string;
   gallery?: string[];
   lengths: Length[];
+  /** Optional color choices (e.g. ["Pink", "Gold", "Teal", "White"]). */
+  colors?: string[];
   comingSoon?: boolean;
 };
 
@@ -32,9 +34,32 @@ type Product = {
   img: string;
   gallery?: string[];
   lengths?: Length[];
+  /** Optional color choices. */
+  colors?: string[];
   variants?: Variant[];
   comingSoon?: boolean;
 };
+
+/**
+ * Map a human color name to a CSS color for the swatch dot. Values were
+ * tuned to read well on the noir background and roughly match the actual
+ * satin shades of the PSHB accessory line.
+ */
+function colorSwatch(name: string): string {
+  const key = name.trim().toLowerCase();
+  switch (key) {
+    case "pink":
+      return "#F2B6C2";
+    case "gold":
+      return "linear-gradient(135deg, #E8B860, #C28A38)";
+    case "teal":
+      return "#5BA9A0";
+    case "white":
+      return "#EFEAD9";
+    default:
+      return "oklch(0.68 0.09 22)";
+  }
+}
 
 // Lowest known price across a product's lengths (or all its variants' lengths).
 function fromPriceOf(product: Product): number | null {
@@ -253,12 +278,13 @@ const collections: Product[] = [
       {
         name: "Bonnet",
         description:
-          "Satin-lined bonnet embroidered with the PSHB monogram. Protects your hair and edges overnight. Available in pink, gold, teal, and white.",
+          "Satin-lined bonnet embroidered with the PSHB monogram. Protects your hair and edges overnight.",
         img: "/images/gallery/bonnet-gold-model.jpg",
         gallery: [
           "/images/gallery/bonnet-gold-model.jpg",
           "/images/gallery/bonnet-gold-flat.jpg",
         ],
+        colors: ["Pink", "Gold", "Teal", "White"],
         lengths: [
           {
             in: 0,
@@ -270,9 +296,10 @@ const collections: Product[] = [
       {
         name: "Head Wrap",
         description:
-          "Satin head wrap embroidered with the PSHB monogram. Perfect for edges, sleep, or styling. Available in pink, gold, teal, and white.",
+          "Satin head wrap embroidered with the PSHB monogram. Perfect for edges, sleep, or styling.",
         img: "/images/gallery/headwrap-teal-model.jpg",
         gallery: ["/images/gallery/headwrap-teal-model.jpg"],
+        colors: ["Pink", "Gold", "Teal", "White"],
         lengths: [
           {
             in: 0,
@@ -311,18 +338,21 @@ export default function CollectionsSection() {
   const [variantIndex, setVariantIndex] = useState<number | null>(null);
   const [imgIndex, setImgIndex] = useState(0);
   const [lengthIndex, setLengthIndex] = useState(0);
+  const [colorIndex, setColorIndex] = useState(0);
 
   const openShop = (product: Product) => {
     setShopProduct(product);
     setVariantIndex(null);
     setImgIndex(0);
     setLengthIndex(0);
+    setColorIndex(0);
   };
   const closeShop = () => setShopProduct(null);
   const chooseVariant = (idx: number) => {
     setVariantIndex(idx);
     setImgIndex(0);
     setLengthIndex(0);
+    setColorIndex(0);
   };
   const backToVariants = () => setVariantIndex(null);
 
@@ -932,6 +962,62 @@ export default function CollectionsSection() {
                         </div>
                       )}
 
+                      {detail.colors && detail.colors.length > 0 && (
+                        <div className="mb-6">
+                          <div className="flex items-center justify-between mb-2">
+                            <span
+                              className="font-['Josefin_Sans'] text-[0.6rem] tracking-[0.2em] uppercase"
+                              style={{ color: "oklch(0.80 0.07 22)" }}
+                            >
+                              Color
+                            </span>
+                            <span
+                              className="font-['Cormorant_Garamond'] text-sm"
+                              style={{ color: "oklch(0.60 0.02 60)" }}
+                            >
+                              {detail.colors[colorIndex]} selected
+                            </span>
+                          </div>
+                          <div className="flex flex-wrap gap-3">
+                            {detail.colors.map((c, idx) => {
+                              const active = idx === colorIndex;
+                              const swatch = colorSwatch(c);
+                              return (
+                                <button
+                                  key={c}
+                                  onClick={() => setColorIndex(idx)}
+                                  aria-label={`${c} color`}
+                                  className="group flex flex-col items-center gap-1.5 transition-transform duration-200 hover:scale-105"
+                                >
+                                  <span
+                                    className="block w-8 h-8 rounded-full transition-all"
+                                    style={{
+                                      background: swatch,
+                                      border: active
+                                        ? "2px solid oklch(0.85 0.07 22)"
+                                        : "1px solid oklch(0.68 0.09 22 / 35%)",
+                                      boxShadow: active
+                                        ? "0 0 0 2px oklch(0.08 0.004 285), 0 0 0 3px oklch(0.85 0.07 22 / 50%)"
+                                        : "none",
+                                    }}
+                                  />
+                                  <span
+                                    className="font-['Josefin_Sans'] text-[0.55rem] tracking-[0.15em] uppercase"
+                                    style={{
+                                      color: active
+                                        ? "oklch(0.90 0.05 22)"
+                                        : "oklch(0.60 0.02 60)",
+                                    }}
+                                  >
+                                    {c}
+                                  </span>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+
                       <button
                         onClick={() => {
                           // Length-based products require a length pick with a price.
@@ -956,11 +1042,13 @@ export default function CollectionsSection() {
                             return;
                           }
                           const variantName = isVariant ? detail.name : undefined;
+                          const colorName = detail.colors?.[colorIndex];
                           addItem({
-                            key: cartKey(shopProduct.name, variantName, selected?.in),
+                            key: cartKey(shopProduct.name, variantName, selected?.in, colorName),
                             name: shopProduct.name,
                             variant: variantName,
                             length: selected?.in,
+                            color: colorName,
                             price: fallbackPrice,
                             image: detail.img,
                             checkoutUrl: selected?.checkoutUrl,

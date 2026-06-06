@@ -27,6 +27,8 @@ export type CartItem = {
   variant?: string;
   /** Length in inches when applicable. */
   length?: number;
+  /** Optional color choice (e.g. "Gold" for the PSHB bonnet). */
+  color?: string;
   /** Unit price in USD. */
   price: number;
   /** Thumbnail src. */
@@ -162,7 +164,7 @@ export function useCart() {
   return ctx;
 }
 
-/** Build a stable cart-item key from product + variant + length. */
-export function cartKey(name: string, variant?: string, length?: number) {
-  return `${name}::${variant ?? ""}::${length ?? ""}`;
+/** Build a stable cart-item key from product + variant + length + color. */
+export function cartKey(name: string, variant?: string, length?: number, color?: string) {
+  return `${name}::${variant ?? ""}::${length ?? ""}::${color ?? ""}`;
 }
