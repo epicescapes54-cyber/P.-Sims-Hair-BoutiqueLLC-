@@ -241,14 +241,47 @@ const collections: Product[] = [
   },
   {
     id: 4,
-    name: "Luxury Repair Serum",
-    category: "Hair Care",
-    price: "$68",
+    name: "PSHB Bonnet & Head Wrap",
+    category: "Accessories",
+    price: "$5.99",
     originalPrice: null,
-    description: "Argan oil & keratin infused serum for ultimate shine and repair.",
-    badge: "Limited",
-    img: "/images/gallery/photo-07.jpg",
-    comingSoon: true,
+    description:
+      "Signature satin bonnet and head wrap, embroidered with the PSHB monogram.",
+    badge: "New Arrival",
+    img: "/images/gallery/bonnet-gold-model.jpg",
+    variants: [
+      {
+        name: "Bonnet",
+        description:
+          "Satin-lined bonnet embroidered with the PSHB monogram. Protects your hair and edges overnight. Available in pink, gold, teal, and white.",
+        img: "/images/gallery/bonnet-gold-model.jpg",
+        gallery: [
+          "/images/gallery/bonnet-gold-model.jpg",
+          "/images/gallery/bonnet-gold-flat.jpg",
+        ],
+        lengths: [
+          {
+            in: 0,
+            price: 9.99,
+            checkoutUrl: "https://buy.stripe.com/5kQ3cn2VUcT49gP9XCfbq0Z",
+          },
+        ],
+      },
+      {
+        name: "Head Wrap",
+        description:
+          "Satin head wrap embroidered with the PSHB monogram. Perfect for edges, sleep, or styling. Available in pink, gold, teal, and white.",
+        img: "/images/gallery/headwrap-teal-model.jpg",
+        gallery: ["/images/gallery/headwrap-teal-model.jpg"],
+        lengths: [
+          {
+            in: 0,
+            price: 5.99,
+            checkoutUrl: "https://buy.stripe.com/7sYaEP6862eqdx52vafbq10",
+          },
+        ],
+      },
+    ],
   },
   {
     id: 6,
@@ -853,7 +886,7 @@ export default function CollectionsSection() {
                         {detail.description ?? shopProduct.description}
                       </p>
 
-                      {lens.length > 0 && (
+                      {lens.length > 0 && lens.some((l) => l.in > 0) && (
                         <div className="mb-6">
                           <div className="flex items-center justify-between mb-2">
                             <span
@@ -862,7 +895,7 @@ export default function CollectionsSection() {
                             >
                               Length
                             </span>
-                            {selected && (
+                            {selected && selected.in > 0 && (
                               <span
                                 className="font-['Cormorant_Garamond'] text-sm"
                                 style={{ color: "oklch(0.60 0.02 60)" }}
