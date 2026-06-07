@@ -8,7 +8,7 @@ import { ShoppingBag, Sparkles, ChevronLeft, ChevronRight, X } from "lucide-reac
 import { toast } from "sonner";
 import { useCart, cartKey } from "@/contexts/CartContext";
 
-const PRODUCTS_IMG = "/images/gallery/photo-03.jpg";
+const PRODUCTS_IMG = "/images/gallery/luxury-hair-banner.png";
 
 type Length = { in: number; price?: number; checkoutUrl?: string };
 
@@ -79,7 +79,7 @@ const collections: Product[] = [
     originalPrice: null,
     description: "100% virgin Remy human hair bundles. Choose your texture.",
     badge: "Bestseller",
-    img: "/images/gallery/photo-15.jpg",
+    img: "/images/gallery/bundle-cover.png",
     variants: [
       {
         name: "Straight",
@@ -108,7 +108,8 @@ const collections: Product[] = [
       {
         name: "Loose Wave",
         description: "Loose wave 100% virgin Remy human hair bundles.",
-        img: "/images/gallery/photo-04.jpg",
+        img: "/images/gallery/loose-wave-variant.png",
+        gallery: ["/images/gallery/loose-wave-variant.png", "/images/gallery/photo-04.jpg"],
         lengths: [
           { in: 12, price: 180, checkoutUrl: "https://buy.stripe.com/dRm7sDeECaKWfFd5Hmfbq0D" },
           { in: 14, price: 185, checkoutUrl: "https://buy.stripe.com/8x24grcwu8CO2Sr2vafbq0F" },
@@ -125,7 +126,8 @@ const collections: Product[] = [
       {
         name: "Body Wave",
         description: "Body wave 100% virgin Remy human hair bundles.",
-        img: "/images/gallery/photo-09.jpg",
+        img: "/images/gallery/body-wave-variant.jpg",
+        gallery: ["/images/gallery/body-wave-variant.jpg", "/images/gallery/photo-09.jpg"],
         lengths: [
           { in: 12, price: 180, checkoutUrl: "https://buy.stripe.com/fZu28jdAy7yKct18Tyfbq0B" },
           { in: 14, price: 185, checkoutUrl: "https://buy.stripe.com/dRm5kvcwu8COgJhd9Ofbq0C" },
@@ -149,7 +151,7 @@ const collections: Product[] = [
     originalPrice: null,
     description: "Choose your construction — 13×4 HD lace frontal or 5×5 HD closure.",
     badge: "New Arrival",
-    img: "/images/gallery/photo-05.jpg",
+    img: "/images/gallery/hd-lace-wigs-cover.png",
     variants: [
       {
         name: "13×4 HD Lace Frontal Wig",
@@ -316,7 +318,8 @@ const collections: Product[] = [
     category: "Hair Care",
     price: "$—",
     originalPrice: null,
-    description: "Sulfate-free shampoo & conditioner to keep your hair healthy.",
+    description:
+      "TRESemmé shampoo and conditioner systems offer salon-quality care at an affordable price. By targeting specific hair needs, these duos cleanse without stripping natural oils, deeply hydrate, and provide essential protection against damage and breakage.",
     badge: null,
     img: "/images/gallery/photo-02.jpg",
     comingSoon: true,
@@ -469,7 +472,7 @@ export default function CollectionsSection() {
                 className="font-['Playfair_Display'] text-3xl lg:text-4xl font-bold"
                 style={{ color: "oklch(0.93 0.02 60)" }}
               >
-                100% Virgin Remy Human Hair
+                Luxury Human Hair
               </h3>
             </div>
           </div>
