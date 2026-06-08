@@ -48,20 +48,14 @@ export default function Navbar() {
             {/* Logo */}
             <button
               onClick={() => handleNavClick("#home")}
-              className="flex flex-col items-start group"
+              aria-label="P. Sims Hair Boutique LLC — home"
+              className="flex items-center group"
             >
-              <span
-                className="font-['Playfair_Display'] text-xl font-bold tracking-wide leading-none"
-                style={{ color: "oklch(0.80 0.07 22)" }}
-              >
-                P. Sims
-              </span>
-              <span
-                className="font-['Josefin_Sans'] text-[0.6rem] tracking-[0.35em] uppercase leading-none mt-0.5"
-                style={{ color: "oklch(0.68 0.09 22 / 80%)" }}
-              >
-                Hair Boutique LLC
-              </span>
+              <img
+                src="/images/pshb-logo.png"
+                alt="P. Sims Hair Boutique LLC"
+                className="h-12 sm:h-14 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+              />
             </button>
 
             {/* Desktop Nav */}

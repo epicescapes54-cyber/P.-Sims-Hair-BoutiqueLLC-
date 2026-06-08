@@ -8,7 +8,7 @@ import { ShoppingBag, Sparkles, ChevronLeft, ChevronRight, X } from "lucide-reac
 import { toast } from "sonner";
 import { useCart, cartKey } from "@/contexts/CartContext";
 
-const PRODUCTS_IMG = "/images/gallery/luxury-hair-banner.png";
+const PRODUCTS_IMG = "/images/gallery/luxury-hair-banner.jpg";
 
 type Length = { in: number; price?: number; checkoutUrl?: string };
 
@@ -88,9 +88,7 @@ const collections: Product[] = [
         img: "/images/gallery/photo-15.jpg",
         gallery: [
           "/images/gallery/photo-15.jpg",
-          "/images/gallery/photo-13.jpg",
-          "/images/gallery/photo-14.jpg",
-          "/images/gallery/photo-16.jpg",
+          "/images/gallery/straight-inside.jpg",
         ],
         lengths: [
           { in: 12, price: 180, checkoutUrl: "https://buy.stripe.com/28E7sDgMK7yK0Kjc5Kfbq02" },
@@ -109,7 +107,10 @@ const collections: Product[] = [
         name: "Loose Wave",
         description: "Loose wave 100% virgin Remy human hair bundles.",
         img: "/images/gallery/loose-wave-variant.png",
-        gallery: ["/images/gallery/loose-wave-variant.png", "/images/gallery/photo-04.jpg"],
+        gallery: [
+          "/images/gallery/loose-wave-variant.png",
+          "/images/gallery/loose-wave-inside.jpg",
+        ],
         lengths: [
           { in: 12, price: 180, checkoutUrl: "https://buy.stripe.com/dRm7sDeECaKWfFd5Hmfbq0D" },
           { in: 14, price: 185, checkoutUrl: "https://buy.stripe.com/8x24grcwu8CO2Sr2vafbq0F" },
@@ -127,7 +128,10 @@ const collections: Product[] = [
         name: "Body Wave",
         description: "Body wave 100% virgin Remy human hair bundles.",
         img: "/images/gallery/body-wave-variant.jpg",
-        gallery: ["/images/gallery/body-wave-variant.jpg", "/images/gallery/photo-09.jpg"],
+        gallery: [
+          "/images/gallery/body-wave-variant.jpg",
+          "/images/gallery/body-wave-inside.jpg",
+        ],
         lengths: [
           { in: 12, price: 180, checkoutUrl: "https://buy.stripe.com/fZu28jdAy7yKct18Tyfbq0B" },
           { in: 14, price: 185, checkoutUrl: "https://buy.stripe.com/dRm5kvcwu8COgJhd9Ofbq0C" },
@@ -191,7 +195,7 @@ const collections: Product[] = [
     originalPrice: null,
     description: "Choose your closure — HD lace frontal closure or HD lace closure.",
     badge: null,
-    img: "/images/gallery/photo-06.jpg",
+    img: "/images/gallery/hd-lace-closures-cover.jpg",
     variants: [
       {
         name: "HD Lace Frontal Closure",

@@ -58,18 +58,11 @@ export default function Footer() {
           <div className="lg:col-span-2 flex flex-col gap-5">
             {/* Logo */}
             <div>
-              <p
-                className="font-['Playfair_Display'] text-3xl font-bold"
-                style={{ color: "oklch(0.80 0.07 22)" }}
-              >
-                P. Sims
-              </p>
-              <p
-                className="font-['Josefin_Sans'] text-[0.65rem] tracking-[0.3em] uppercase mt-1"
-                style={{ color: "oklch(0.68 0.09 22 / 70%)" }}
-              >
-                Hair Boutique LLC
-              </p>
+              <img
+                src="/images/pshb-logo.png"
+                alt="P. Sims Hair Boutique LLC"
+                className="h-24 lg:h-28 w-auto object-contain"
+              />
             </div>
 
             {/* Tagline */}
