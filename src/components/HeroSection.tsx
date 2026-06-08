@@ -9,7 +9,7 @@ import { ChevronDown, Pause, Play, Volume2, VolumeX } from "lucide-react";
 
 const HERO_IMG = "/images/gallery/photo-27.jpg";
 const PORTRAIT_IMG = "/images/gallery/photo-02.jpg";
-const PORTRAIT_VIDEO = "/images/gallery/hero-video.mov";
+const PORTRAIT_VIDEO = "/images/gallery/hero-video.mp4";
 
 export default function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
