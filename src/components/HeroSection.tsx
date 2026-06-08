@@ -5,7 +5,7 @@
    ============================================================================= */
 
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, Volume2, VolumeX } from "lucide-react";
+import { ChevronDown, Pause, Play, Volume2, VolumeX } from "lucide-react";
 
 const HERO_IMG = "/images/gallery/photo-27.jpg";
 const PORTRAIT_IMG = "/images/gallery/photo-02.jpg";
@@ -15,6 +15,7 @@ export default function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [muted, setMuted] = useState(true);
+  const [playing, setPlaying] = useState(true);
 
   const toggleMute = () => {
     const v = videoRef.current;
@@ -22,7 +23,22 @@ export default function HeroSection() {
     v.muted = !v.muted;
     setMuted(v.muted);
     // First user gesture lets the browser keep the audio playing.
-    if (!v.muted && v.paused) v.play().catch(() => {});
+    if (!v.muted && v.paused) {
+      v.play().catch(() => {});
+      setPlaying(true);
+    }
+  };
+
+  const togglePlay = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) {
+      v.play().catch(() => {});
+      setPlaying(true);
+    } else {
+      v.pause();
+      setPlaying(false);
+    }
   };
 
   useEffect(() => {
@@ -280,20 +296,35 @@ export default function HeroSection() {
               style={{ maxHeight: "75vh", objectPosition: "top center" }}
             />
 
-            {/* Unmute button — appears in the corner once the page has loaded */}
-            <button
-              onClick={toggleMute}
-              aria-label={muted ? "Unmute video" : "Mute video"}
-              className="absolute bottom-4 right-4 p-2.5 transition-all duration-200 hover:scale-110 z-10"
-              style={{
-                background: "oklch(0.08 0.004 285 / 0.85)",
-                border: "1px solid oklch(0.68 0.09 22 / 50%)",
-                color: "oklch(0.85 0.07 22)",
-                backdropFilter: "blur(8px)",
-              }}
-            >
-              {muted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-            </button>
+            {/* Video controls — play/pause + mute toggle, corner stacked */}
+            <div className="absolute bottom-4 right-4 flex gap-2 z-10">
+              <button
+                onClick={togglePlay}
+                aria-label={playing ? "Pause video" : "Play video"}
+                className="p-2.5 transition-all duration-200 hover:scale-110"
+                style={{
+                  background: "oklch(0.08 0.004 285 / 0.85)",
+                  border: "1px solid oklch(0.68 0.09 22 / 50%)",
+                  color: "oklch(0.85 0.07 22)",
+                  backdropFilter: "blur(8px)",
+                }}
+              >
+                {playing ? <Pause size={18} /> : <Play size={18} />}
+              </button>
+              <button
+                onClick={toggleMute}
+                aria-label={muted ? "Unmute video" : "Mute video"}
+                className="p-2.5 transition-all duration-200 hover:scale-110"
+                style={{
+                  background: "oklch(0.08 0.004 285 / 0.85)",
+                  border: "1px solid oklch(0.68 0.09 22 / 50%)",
+                  color: "oklch(0.85 0.07 22)",
+                  backdropFilter: "blur(8px)",
+                }}
+              >
+                {muted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+              </button>
+            </div>
           </div>
         </div>
       </div>

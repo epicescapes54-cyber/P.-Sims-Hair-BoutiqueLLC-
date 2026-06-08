@@ -209,8 +209,8 @@ const collections: Product[] = [
         name: "13×4 HD Lace Frontal Wig",
         description:
           "Pre-plucked 13×4 HD lace frontal wig with a natural, melt-into-skin hairline.",
-        img: "/images/gallery/photo-17.jpg",
-        gallery: ["/images/gallery/photo-17.jpg", "/images/gallery/photo-05.jpg"],
+        img: "/images/gallery/frontal-wig-cover.jpg",
+        gallery: ["/images/gallery/frontal-wig-cover.jpg", "/images/gallery/photo-17.jpg"],
         lengths: [
           { in: 14, price: 239.88, checkoutUrl: "https://buy.stripe.com/aFa28j3ZY1am8cLc5Kfbq0c" },
           { in: 18, price: 299.99, checkoutUrl: "https://buy.stripe.com/7sY5kv2VU6uGdx50n2fbq0e" },
@@ -579,7 +579,11 @@ export default function CollectionsSection() {
               {/* Image */}
               <div className="relative overflow-hidden" style={{ height: "280px" }}>
                 {product.comingSoon ? (
-                  <div className="relative w-full h-full" style={{ background: "oklch(0.13 0.006 285)" }}>
+                  <div
+                    onClick={() => openShop(product)}
+                    className="relative w-full h-full cursor-pointer"
+                    style={{ background: "oklch(0.13 0.006 285)" }}
+                  >
                     <RotatingImage
                       photos={
                         product.gallery && product.gallery.length > 0
@@ -588,25 +592,6 @@ export default function CollectionsSection() {
                       }
                       alt={product.name}
                     />
-                    {/* Coming Soon overlay */}
-                    <div
-                      className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-center px-4 pointer-events-none"
-                      style={{ background: "oklch(0.06 0.004 285 / 0.55)" }}
-                    >
-                      <Sparkles size={30} style={{ color: "oklch(0.85 0.07 22)" }} />
-                      <span
-                        className="font-['Playfair_Display'] text-2xl font-bold"
-                        style={{ color: "oklch(0.95 0.05 22)", textShadow: "0 2px 8px oklch(0.04 0.004 285)" }}
-                      >
-                        Coming Soon
-                      </span>
-                      <span
-                        className="font-['Josefin_Sans'] text-[0.6rem] tracking-[0.25em] uppercase"
-                        style={{ color: "oklch(0.85 0.04 60)", textShadow: "0 2px 6px oklch(0.04 0.004 285)" }}
-                      >
-                        Restocking shortly
-                      </span>
-                    </div>
                   </div>
                 ) : (
                   <>
@@ -709,32 +694,23 @@ export default function CollectionsSection() {
                       </span>
                     )}
                   </div>
-                  {product.comingSoon ? (
-                    <span
-                      className="font-['Josefin_Sans'] text-[0.6rem] tracking-[0.15em] uppercase px-4 py-2"
-                      style={{ color: "oklch(0.55 0.02 60)" }}
-                    >
-                      Coming Soon
-                    </span>
-                  ) : (
-                    <button
-                      onClick={() => openShop(product)}
-                      className="font-['Josefin_Sans'] text-[0.6rem] tracking-[0.15em] uppercase px-4 py-2 transition-all duration-200"
-                      style={{
-                        border: "1px solid oklch(0.68 0.09 22 / 60%)",
-                        color: "oklch(0.80 0.07 22)",
-                      }}
-                      onMouseEnter={(e) => {
-                        (e.currentTarget as HTMLElement).style.background =
-                          "oklch(0.68 0.09 22 / 15%)";
-                      }}
-                      onMouseLeave={(e) => {
-                        (e.currentTarget as HTMLElement).style.background = "transparent";
-                      }}
-                    >
-                      Shop Now
-                    </button>
-                  )}
+                  <button
+                    onClick={() => openShop(product)}
+                    className="font-['Josefin_Sans'] text-[0.6rem] tracking-[0.15em] uppercase px-4 py-2 transition-all duration-200"
+                    style={{
+                      border: "1px solid oklch(0.68 0.09 22 / 60%)",
+                      color: "oklch(0.80 0.07 22)",
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLElement).style.background =
+                        "oklch(0.68 0.09 22 / 15%)";
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLElement).style.background = "transparent";
+                    }}
+                  >
+                    Shop Now
+                  </button>
                 </div>
               </div>
 
