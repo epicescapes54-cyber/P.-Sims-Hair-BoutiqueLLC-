@@ -9,7 +9,7 @@ import { Truck, Info, Sparkles, ShieldCheck, ShoppingBag, X } from "lucide-react
 import { toast } from "sonner";
 import { useCart, cartKey } from "@/contexts/CartContext";
 
-const TAPE_IMG = "/images/gallery/photo-12.jpg";
+const TAPE_IMG = "/images/gallery/tape-ins-cover.jpg";
 
 const textures = ["Straight", "Loose Wave", "Body Wave"] as const;
 

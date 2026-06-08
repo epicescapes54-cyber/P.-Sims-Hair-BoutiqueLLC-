@@ -44,7 +44,7 @@ export default function Navbar() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <div className="flex items-center justify-between h-20">
+          <div className="flex items-center justify-between h-24 sm:h-28">
             {/* Logo */}
             <button
               onClick={() => handleNavClick("#home")}
@@ -54,7 +54,7 @@ export default function Navbar() {
               <img
                 src="/images/pshb-logo.png"
                 alt="P. Sims Hair Boutique LLC"
-                className="h-12 sm:h-14 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                className="h-16 sm:h-20 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
               />
             </button>
 

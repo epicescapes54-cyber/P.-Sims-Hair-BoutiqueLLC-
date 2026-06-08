@@ -61,7 +61,7 @@ export default function Footer() {
               <img
                 src="/images/pshb-logo.png"
                 alt="P. Sims Hair Boutique LLC"
-                className="h-24 lg:h-28 w-auto object-contain"
+                className="h-32 lg:h-36 w-auto object-contain"
               />
             </div>
 
