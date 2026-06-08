@@ -4,14 +4,26 @@
    Staggered entrance animations, rose gold geometric accents.
    ============================================================================= */
 
-import { useEffect, useRef } from "react";
-import { ChevronDown } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ChevronDown, Volume2, VolumeX } from "lucide-react";
 
 const HERO_IMG = "/images/gallery/photo-27.jpg";
 const PORTRAIT_IMG = "/images/gallery/photo-02.jpg";
+const PORTRAIT_VIDEO = "/images/gallery/hero-video.mov";
 
 export default function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [muted, setMuted] = useState(true);
+
+  const toggleMute = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = !v.muted;
+    setMuted(v.muted);
+    // First user gesture lets the browser keep the audio playing.
+    if (!v.muted && v.paused) v.play().catch(() => {});
+  };
 
   useEffect(() => {
     const items = containerRef.current?.querySelectorAll(".hero-anim");
@@ -256,12 +268,32 @@ export default function HeroSection() {
               </svg>
             ))}
 
-            <img
-              src={PORTRAIT_IMG}
-              alt="Luxury Hair Model"
+            <video
+              ref={videoRef}
+              src={PORTRAIT_VIDEO}
+              poster={PORTRAIT_IMG}
+              autoPlay
+              muted
+              loop
+              playsInline
               className="w-full h-auto object-cover"
               style={{ maxHeight: "75vh", objectPosition: "top center" }}
             />
+
+            {/* Unmute button — appears in the corner once the page has loaded */}
+            <button
+              onClick={toggleMute}
+              aria-label={muted ? "Unmute video" : "Mute video"}
+              className="absolute bottom-4 right-4 p-2.5 transition-all duration-200 hover:scale-110 z-10"
+              style={{
+                background: "oklch(0.08 0.004 285 / 0.85)",
+                border: "1px solid oklch(0.68 0.09 22 / 50%)",
+                color: "oklch(0.85 0.07 22)",
+                backdropFilter: "blur(8px)",
+              }}
+            >
+              {muted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+            </button>
           </div>
         </div>
       </div>
