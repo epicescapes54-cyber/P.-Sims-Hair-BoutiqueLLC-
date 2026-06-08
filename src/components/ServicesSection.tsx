@@ -14,7 +14,7 @@ const services = [
     icon: Crown,
     title: "Custom Wig Installation",
     duration: "2–3 hrs",
-    price: "From $150",
+    price: "From $250",
     description:
       "HD lace front and full lace installs with custom bleaching, plucking, and a hairline finished to look like it grew from your scalp.",
   },
@@ -22,7 +22,7 @@ const services = [
     icon: Scissors,
     title: "Tape-In & Sew-In Extensions",
     duration: "1.5–2 hrs",
-    price: "From $120",
+    price: "From $150",
     description:
       "Seamless tape-in and sew-in installs using 100% virgin Remy human hair — discreet wefts, all-day comfort, weeks of wear.",
   },
@@ -38,7 +38,7 @@ const services = [
     icon: Star,
     title: "Color & Highlights",
     duration: "2–4 hrs",
-    price: "From $200",
+    price: "From $180",
     description:
       "Balayage, ombre, highlights, and full color transformations — placed by hand for dimension that flatters your tone.",
   },

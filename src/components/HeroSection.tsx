@@ -248,7 +248,7 @@ export default function HeroSection() {
 
           {/* Right: Portrait Image */}
           <div
-            className="hero-anim relative hidden lg:block"
+            className="hero-anim relative"
             style={{ opacity: 0, transform: "translateY(30px)", transition: "all 0.7s ease" }}
           >
             {/* Decorative frame */}
