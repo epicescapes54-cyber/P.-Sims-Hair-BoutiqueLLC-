@@ -262,29 +262,6 @@ export default function HeroSection() {
               className="w-full h-auto object-cover"
               style={{ maxHeight: "75vh", objectPosition: "top center" }}
             />
-
-            {/* Floating badge */}
-            <div
-              className="absolute bottom-8 -left-6 px-5 py-3"
-              style={{
-                background: "oklch(0.08 0.004 285 / 0.95)",
-                border: "1px solid oklch(0.68 0.09 22 / 40%)",
-                backdropFilter: "blur(10px)",
-              }}
-            >
-              <p
-                className="font-['Josefin_Sans'] text-[0.6rem] tracking-[0.25em] uppercase"
-                style={{ color: "oklch(0.68 0.09 22)" }}
-              >
-                New Collection
-              </p>
-              <p
-                className="font-['Playfair_Display'] text-lg font-semibold mt-0.5"
-                style={{ color: "oklch(0.93 0.02 60)" }}
-              >
-                Spring 2026
-              </p>
-            </div>
           </div>
         </div>
       </div>

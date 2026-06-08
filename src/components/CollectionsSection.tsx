@@ -46,6 +46,49 @@ type Product = {
 };
 
 /**
+ * Cycles through a list of photos with a soft crossfade. Used by Coming Soon
+ * cards to feel alive even before they can be shopped. Pauses on hover so the
+ * customer can study a frame they care about.
+ */
+function RotatingImage({
+  photos,
+  alt,
+  intervalMs = 3200,
+  className,
+}: {
+  photos: string[];
+  alt: string;
+  intervalMs?: number;
+  className?: string;
+}) {
+  const [i, setI] = useState(0);
+  const [paused, setPaused] = useState(false);
+  useEffect(() => {
+    if (paused || photos.length < 2) return;
+    const id = setInterval(() => setI((n) => (n + 1) % photos.length), intervalMs);
+    return () => clearInterval(id);
+  }, [paused, photos.length, intervalMs]);
+  return (
+    <div
+      className="relative w-full h-full"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
+      {photos.map((src, idx) => (
+        <img
+          key={src + idx}
+          src={src}
+          alt={idx === 0 ? alt : ""}
+          aria-hidden={idx !== 0 ? true : undefined}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${className ?? ""}`}
+          style={{ opacity: idx === i ? 1 : 0 }}
+        />
+      ))}
+    </div>
+  );
+}
+
+/**
  * Map a human color name to a CSS color for the swatch dot. Values were
  * tuned to read well on the noir background and roughly match the actual
  * satin shades of the PSHB accessory line.
@@ -341,6 +384,11 @@ const collections: Product[] = [
       "TRESemmé shampoo and conditioner systems offer salon-quality care at an affordable price. By targeting specific hair needs, these duos cleanse without stripping natural oils, deeply hydrate, and provide essential protection against damage and breakage.",
     badge: null,
     img: "/images/gallery/coming-soon-1.jpg",
+    gallery: [
+      "/images/gallery/coming-soon-1.jpg",
+      "/images/gallery/coming-soon-2.jpg",
+      "/images/gallery/coming-soon-3.jpg",
+    ],
     comingSoon: true,
   },
 ];
@@ -531,23 +579,34 @@ export default function CollectionsSection() {
               {/* Image */}
               <div className="relative overflow-hidden" style={{ height: "280px" }}>
                 {product.comingSoon ? (
-                  <div
-                    className="w-full h-full flex flex-col items-center justify-center gap-3 text-center px-4"
-                    style={{ background: "oklch(0.13 0.006 285)" }}
-                  >
-                    <Sparkles size={30} style={{ color: "oklch(0.68 0.09 22)" }} />
-                    <span
-                      className="font-['Playfair_Display'] text-2xl font-bold"
-                      style={{ color: "oklch(0.85 0.07 22)" }}
+                  <div className="relative w-full h-full" style={{ background: "oklch(0.13 0.006 285)" }}>
+                    <RotatingImage
+                      photos={
+                        product.gallery && product.gallery.length > 0
+                          ? product.gallery
+                          : [product.img]
+                      }
+                      alt={product.name}
+                    />
+                    {/* Coming Soon overlay */}
+                    <div
+                      className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-center px-4 pointer-events-none"
+                      style={{ background: "oklch(0.06 0.004 285 / 0.55)" }}
                     >
-                      Coming Soon
-                    </span>
-                    <span
-                      className="font-['Josefin_Sans'] text-[0.6rem] tracking-[0.25em] uppercase"
-                      style={{ color: "oklch(0.55 0.02 60)" }}
-                    >
-                      Restocking shortly
-                    </span>
+                      <Sparkles size={30} style={{ color: "oklch(0.85 0.07 22)" }} />
+                      <span
+                        className="font-['Playfair_Display'] text-2xl font-bold"
+                        style={{ color: "oklch(0.95 0.05 22)", textShadow: "0 2px 8px oklch(0.04 0.004 285)" }}
+                      >
+                        Coming Soon
+                      </span>
+                      <span
+                        className="font-['Josefin_Sans'] text-[0.6rem] tracking-[0.25em] uppercase"
+                        style={{ color: "oklch(0.85 0.04 60)", textShadow: "0 2px 6px oklch(0.04 0.004 285)" }}
+                      >
+                        Restocking shortly
+                      </span>
+                    </div>
                   </div>
                 ) : (
                   <>
