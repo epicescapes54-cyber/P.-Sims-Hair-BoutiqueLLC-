@@ -32,6 +32,11 @@ type Product = {
   description: string;
   badge: string | null;
   img: string;
+  /**
+   * Optional video to play on the product card cover (autoplay, muted,
+   * looped). The `img` field still acts as the poster/fallback.
+   */
+  video?: string;
   gallery?: string[];
   lengths?: Length[];
   /** Optional color choices. */
@@ -196,12 +201,17 @@ const collections: Product[] = [
     description: "Choose your closure — HD lace frontal closure or HD lace closure.",
     badge: null,
     img: "/images/gallery/hd-lace-closures-cover.jpg",
+    video: "/images/gallery/hd-lace-closures-cover.mp4",
     variants: [
       {
         name: "HD Lace Frontal Closure",
         description: "HD lace frontal closure with a natural, pre-plucked hairline.",
-        img: "/images/gallery/photo-06.jpg",
-        gallery: ["/images/gallery/photo-06.jpg", "/images/gallery/photo-20.jpg"],
+        img: "/images/gallery/frontal-closure-cover.jpg",
+        gallery: [
+          "/images/gallery/frontal-closure-cover.jpg",
+          "/images/gallery/frontal-closure-inside-1.png",
+          "/images/gallery/frontal-closure-inside-2.png",
+        ],
         lengths: [
           { in: 14, price: 225, checkoutUrl: "https://buy.stripe.com/3cI3cneECaKW78H7Pufbq0P" },
           { in: 16, price: 245, checkoutUrl: "https://buy.stripe.com/fZuaEPbsq06i3Wv7Pufbq0Q" },
@@ -212,8 +222,12 @@ const collections: Product[] = [
       {
         name: "HD Lace Closure",
         description: "5×5 HD lace closure. Glueless and beginner-friendly.",
-        img: "/images/gallery/photo-21.jpg",
-        gallery: ["/images/gallery/photo-21.jpg", "/images/gallery/photo-22.jpg"],
+        img: "/images/gallery/lace-closure-cover.jpg",
+        gallery: [
+          "/images/gallery/lace-closure-cover.jpg",
+          "/images/gallery/lace-closure-inside-1.jpg",
+          "/images/gallery/lace-closure-inside-2.jpg",
+        ],
         lengths: [
           { in: 14, price: 175, checkoutUrl: "https://buy.stripe.com/eVq8wH5428CO50zc5Kfbq0T" },
           { in: 16, price: 185, checkoutUrl: "https://buy.stripe.com/7sYeV55426uG78H8Tyfbq0U" },
@@ -231,13 +245,16 @@ const collections: Product[] = [
     originalPrice: null,
     description: "Choose your texture — deep wave or kinky curly.",
     badge: null,
-    img: "/images/gallery/photo-08.jpg",
+    img: "/images/gallery/dwkc-card-cover.jpg",
     variants: [
       {
         name: "Deep Wave",
         description: "Deep wave 100% virgin Remy human hair bundles.",
-        img: "/images/gallery/photo-26.jpg",
-        gallery: ["/images/gallery/photo-26.jpg", "/images/gallery/photo-28.jpg"],
+        img: "/images/gallery/deep-wave-cover.png",
+        gallery: [
+          "/images/gallery/deep-wave-cover.png",
+          "/images/gallery/deep-wave-inside.png",
+        ],
         lengths: [
           { in: 12, price: 199 },
           { in: 14, price: 219 },
@@ -251,12 +268,10 @@ const collections: Product[] = [
       {
         name: "Kinky Curly",
         description: "Natural kinky curly texture. Blends seamlessly with natural hair.",
-        img: "/images/gallery/photo-08.jpg",
+        img: "/images/gallery/kinky-curly-cover.jpg",
         gallery: [
-          "/images/gallery/photo-08.jpg",
-          "/images/gallery/photo-23.jpg",
-          "/images/gallery/photo-24.jpg",
-          "/images/gallery/photo-25.jpg",
+          "/images/gallery/kinky-curly-cover.jpg",
+          "/images/gallery/kinky-curly-inside.jpg",
         ],
         lengths: [
           { in: 12, price: 199 },
@@ -325,7 +340,7 @@ const collections: Product[] = [
     description:
       "TRESemmé shampoo and conditioner systems offer salon-quality care at an affordable price. By targeting specific hair needs, these duos cleanse without stripping natural oils, deeply hydrate, and provide essential protection against damage and breakage.",
     badge: null,
-    img: "/images/gallery/photo-02.jpg",
+    img: "/images/gallery/coming-soon-1.jpg",
     comingSoon: true,
   },
 ];
@@ -536,12 +551,25 @@ export default function CollectionsSection() {
                   </div>
                 ) : (
                   <>
-                    <img
-                      src={product.img}
-                      alt={product.name}
-                      onClick={() => openShop(product)}
-                      className="w-full h-full object-cover cursor-pointer transition-transform duration-700 group-hover:scale-110"
-                    />
+                    {product.video ? (
+                      <video
+                        src={product.video}
+                        poster={product.img}
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        onClick={() => openShop(product)}
+                        className="w-full h-full object-cover cursor-pointer transition-transform duration-700 group-hover:scale-110"
+                      />
+                    ) : (
+                      <img
+                        src={product.img}
+                        alt={product.name}
+                        onClick={() => openShop(product)}
+                        className="w-full h-full object-cover cursor-pointer transition-transform duration-700 group-hover:scale-110"
+                      />
+                    )}
                     <div
                       className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none"
                       style={{ background: "oklch(0.06 0.004 285 / 0.7)" }}

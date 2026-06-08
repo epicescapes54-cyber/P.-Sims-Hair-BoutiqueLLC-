@@ -11,26 +11,31 @@ import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
 // 4 photos shown in the 2×2 mosaic teaser on the page (before tap).
 const TEASER_PHOTOS = [
-  "/images/gallery/photo-27.jpg",
-  "/images/gallery/photo-04.jpg",
-  "/images/gallery/photo-09.jpg",
-  "/images/gallery/photo-17.jpg",
+  "/images/gallery/gallery-teaser-1.jpg",
+  "/images/gallery/gallery-teaser-2.jpg",
+  "/images/gallery/gallery-teaser-3.png",
+  "/images/gallery/gallery-teaser-4.jpg",
 ];
 
 // Full gallery shown inside the lightbox.
 const GALLERY_PHOTOS = [
-  "/images/gallery/photo-27.jpg",
-  "/images/gallery/photo-01.jpg",
-  "/images/gallery/photo-04.jpg",
-  "/images/gallery/photo-09.jpg",
-  "/images/gallery/photo-10.jpg",
-  "/images/gallery/photo-11.jpg",
-  "/images/gallery/photo-12.jpg",
-  "/images/gallery/photo-03.jpg",
-  "/images/gallery/photo-17.jpg",
-  "/images/gallery/photo-19.jpg",
-  "/images/gallery/photo-25.jpg",
-  "/images/gallery/photo-29.jpg",
+  "/images/gallery/gallery-01.jpg",
+  "/images/gallery/gallery-02.jpg",
+  "/images/gallery/gallery-03.jpg",
+  "/images/gallery/gallery-04.jpg",
+  "/images/gallery/gallery-05.jpg",
+  "/images/gallery/gallery-06.jpg",
+  "/images/gallery/gallery-07.jpg",
+  "/images/gallery/gallery-08.jpg",
+  "/images/gallery/gallery-09.jpg",
+  "/images/gallery/gallery-10.jpg",
+  "/images/gallery/gallery-11.jpg",
+  "/images/gallery/gallery-12.webp",
+  "/images/gallery/gallery-13.jpg",
+  "/images/gallery/gallery-14.png",
+  "/images/gallery/gallery-15.png",
+  "/images/gallery/gallery-16.png",
+  "/images/gallery/gallery-17.png",
 ];
 
 export default function GallerySection() {
